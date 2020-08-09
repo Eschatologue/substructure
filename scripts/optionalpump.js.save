@@ -1,5 +1,0 @@
-const oPump = extendContent(Pump, "optional-pump", {});
-
-oPump.size = 3;
-oPump.
-
