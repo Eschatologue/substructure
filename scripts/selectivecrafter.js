@@ -1,3 +1,4 @@
+//WIP: ~~May not be continued~~
 const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   load(){
     this.region = Core.atlas.find(this.name + "-icon");
@@ -12,7 +13,7 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   draw(tile){
     entity = tile.ent();
 
-    Draw.rect(this.convRegion[entity.getFrame()], tile.drawx(), tile.drawy());
+    Draw.rect(this.convRegion[Math.floor(Mathf.absin(entity.totalProgress, 5, 2.999))], tile.drawx(), tile.drawy());
     Draw.rect(this.baseRegion, tile.drawx(), tile.drawy());
     if(entity.liquids.total() > 0.001){
       Draw.color(entity.liquids.current().color);
@@ -25,9 +26,6 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   update(tile){
     entity = tile.ent();
     this.super$update(tile);
-
-    if(entity.timer.get(this.frameTimer, 3)) entity.setFrame(entity.getFrame() + 1);
-    if(entity.getFrame() == this.convRegion.length) entity.setFrame(0);
   }
 });
 
@@ -46,14 +44,7 @@ sCrafter.frameTimer = sCrafter.timers++;
 
 sCrafter.entityType = prov(() => {
   const entity = extend(GenericCrafter.GenericCrafterEntity, {
-    getFrame(){
-      return this._frame;
-    },
-
-    setFrame(int){
-      this._frame = int;
-    }
+    //TODO fail
   });
-  entity.setFrame(0);
   return entity;
 });
