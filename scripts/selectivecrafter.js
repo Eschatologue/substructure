@@ -1,26 +1,35 @@
-//WIP: ~~May not be continued~~
 const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   load(){
     this.region = Core.atlas.find(this.name + "-icon");
     this.baseRegion = Core.atlas.find(this.name);
-    this.liquidRegion = Core.atlas.find(this.name + "-liquid");
-    this.convRegion = [];
+    this.inputRegion = [];
+    this.outputRegion = [];
     for(i = 1; i < 4; i++){
-      this.convRegion.push(Core.atlas.find(this.name + "-conv-" + i))
+      this.inputRegion.push(Core.atlas.find(this.name + "-i-" + i));
+      this.outputRegion.push(Core.atlas.find(this.name + "-o-" + i))
     }
+  },
+
+  generateIcons(){
+    return [
+      Core.atlas.find(this.name + "-i-1"),
+      Core.atlas.find(this.name + "-o-1"),
+      Core.atlas.find(this.name)
+    ]
   },
 
   draw(tile){
     entity = tile.ent();
+    front = tile.front();
 
-    Draw.rect(this.convRegion[Math.floor(Mathf.absin(entity.totalProgress, 5, 2.999))], tile.drawx(), tile.drawy());
+    if(front.block() instanceof Conveyor){
+      Draw.rect(this.outputRegion[Mathf.clamp(front.draw.frame, 0, this.outputRegion[0].length - 1)], tile.drawx(), tile.drawy());
+    } /*else {
+      Draw.rect(this.inputRegion[0], tile.drawx(), tile.drawy());
+      Draw.rect(this.outputRegion[0], tile.drawx(), tile.drawy());
+    }*/
+
     Draw.rect(this.baseRegion, tile.drawx(), tile.drawy());
-    if(entity.liquids.total() > 0.001){
-      Draw.color(entity.liquids.current().color);
-      Draw.alpha(entity.liquids.total() / this.liquidCapacity);
-      Draw.rect(this.liquidRegion, tile.drawx(), tile.drawy());
-      Draw.color();
-    }
   },
 
   update(tile){
@@ -30,13 +39,11 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
 });
 
 sCrafter.size = 3;
-sCrafter.hasLiquids = true;
 sCrafter.hasItems = true;
 sCrafter.hasPower = true;
 sCrafter.requirements = ItemStack.with(Items.copper, 60, Items.lead, 40, Items.titanium, 35);
 sCrafter.consumes.item(Items.sand, 1);
 sCrafter.consumes.power(1.15);
-sCrafter.consumes.liquid(Liquids.water, 0.06);
 sCrafter.outputItem = new ItemStack(Items.scrap, 1);
 sCrafter.category = Category.crafting;
 sCrafter.buildVisibility = BuildVisibility.shown;
