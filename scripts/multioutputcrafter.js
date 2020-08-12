@@ -1,8 +1,8 @@
 const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
   init(){
-	  this.outputItems = [
-	    new ItemStack(Items.silicon, 1),
-	    new ItemStack(Items.graphite, 2)
+    this.outputItems = [
+      new ItemStack(Items.silicon, 1),
+      new ItemStack(Items.graphite, 2)
     ];
     this.super$init();
   },
