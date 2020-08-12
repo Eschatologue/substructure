@@ -1,7 +1,8 @@
 //Blocks
   require("selectivecrafter");
+  require("multioutputcrafter");
   require("powerjunction");
-  require("blockposreader")
+  require("blockposreader");
 
 //Others
   require("init");

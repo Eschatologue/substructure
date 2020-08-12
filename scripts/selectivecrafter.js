@@ -4,7 +4,7 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
     this.baseRegion = Core.atlas.find(this.name);
     this.inputRegion = [];
     this.outputRegion = [];
-    for(i = 1; i < 4; i++){
+    for(var i = 1; i < 4; i++){
       this.inputRegion.push(Core.atlas.find(this.name + "-i-" + i));
       this.outputRegion.push(Core.atlas.find(this.name + "-o-" + i))
     }
