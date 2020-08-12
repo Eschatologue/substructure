@@ -29,11 +29,18 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
       Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
       entity.progress = 0;
     }
-    
-    if(entity.timer.get(this.timerDump, 5) && entity.items.total() < 10){
+
+    if(entity.timer.get(this.timerDump, this.dumpTime) && this.outputItems[i] != null){
       for(var i = 0; i < this.outputItems.length; i++){
         this.tryDump(tile, this.outputItems[i].item);
       }
+    }
+  },
+
+  shouldConsume(tile){
+    for(var i = 0; i < this.outputItems.length; i++){
+      if(this.outputItems[i] != null && tile.entity.items.get(this.outputItems[i].item) >= this.itemCapacity) return false;
+       else return true;
     }
   }
 });
@@ -41,7 +48,7 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
 multCrafter.size = 3;
 multCrafter.hasItems = true;
 multCrafter.hasLiquids = false;
-multCrafter.consumes.items(new ItemStack(Items.sand, 1), new ItemStack(Items.coal, 2));
+multCrafter.consumes.items(new ItemStack(Items.sand, 2), new ItemStack(Items.coal, 3));
 multCrafter.requirements = ItemStack.with(Items.copper, 60, Items.lead, 30, Items.silicon, 40);
 multCrafter.category = Category.crafting;
 multCrafter.buildVisibility = BuildVisibility.shown;
