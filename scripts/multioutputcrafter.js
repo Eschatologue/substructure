@@ -48,6 +48,8 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
 multCrafter.size = 3;
 multCrafter.hasItems = true;
 multCrafter.hasLiquids = false;
+multCrafter.hasPower = true;
+multCrafter.consumes.power(2.6);
 multCrafter.consumes.items(new ItemStack(Items.sand, 2), new ItemStack(Items.coal, 3));
 multCrafter.requirements = ItemStack.with(Items.copper, 60, Items.lead, 30, Items.silicon, 40);
 multCrafter.category = Category.crafting;
