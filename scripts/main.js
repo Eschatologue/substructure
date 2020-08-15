@@ -2,6 +2,9 @@
   require("selectivecrafter");
   require("multioutputcrafter");
 
+//Liquid
+  require("optionalpump");
+
 //Distribution
   require("powerjunction");
 
