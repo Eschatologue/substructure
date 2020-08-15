@@ -63,8 +63,10 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
   },
 
   shouldConsume(tile){
+    entity = tile.ent();
+
     for(var i = 0; i < this.outputItems.length; i++){
-      if(this.outputItems[i] != null && tile.entity.items.get(this.outputItems[i].item) >= this.itemCapacity) return false;
+      if(this.outputItems[i] != null && tile.entity.items.get(this.outputItems[0].item) >= this.itemCapacity || tile.entity.items.get(this.outputItems[1].item) >= this.itemCapacity) return false;
        else return true;
     }
   }
