@@ -26,8 +26,8 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
 
   generateIcons(){
     return [
-      Core.atlas.find(this.name);
-      Core.atlas.find(this.name + "-top");
+      Core.atlas.find(this.name),
+      Core.atlas.find(this.name + "-top")
     ]
   },
 
@@ -55,7 +55,7 @@ const multCrafter = extendContent(GenericCrafter, "multi-output-crafter", {
       entity.progress = 0;
     }
 
-    if(entity.timer.get(this.timerDump, this.dumpTime) && this.outputItems[i] != null){
+    if(entity.timer.get(this.timerDump, this.dumpTime)){
       for(var i = 0; i < this.outputItems.length; i++){
         this.tryDump(tile, this.outputItems[i].item);
       }
