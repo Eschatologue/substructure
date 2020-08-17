@@ -4,7 +4,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     this.super$load();
   },
 
-  buildConfiguration(tile, table){
+  /*buildConfiguration(tile, table){
     entity = tile.ent();
 
     table.addImageButton(Icon.defense, Styles.clearTransi, run(() => {
@@ -18,66 +18,88 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     table.addImageButton(Icon.players, Styles.clearTransi, run(() => {
       entity.setState("player");
     })).size(50).disabled(boolf(b => entity.power.status < 1));
-  },
+  },*/
 
   realRange(entity){
-    return (this.teleRange + entity._phaseHeat * this.telePhaseRange) * entity._radscl;
+    return ((this.teleRange + entity.getCryoHeat() * this.teleCryoRange) * entity.getScl()) * Vars.tilesize;
   },
 
-  drawLayer2(tile){
-    entity = tile.ent();
+  drawSelect(tile){
+    Draw.color(Color.valueOf("9c88c3"));
+    Lines.dashCircle(tile.drawx(), tile.drawy(), this.realRange(tile.ent()));
+  },
 
+  drawLayer(tile){
+    entity = tile.ent();
+    rad = this.realRange(entity);
+    g = 0.03;
+    r = 0.06;
+
+    this.super$drawLayer(tile);
     Draw.color(Color.valueOf("a387ea"));
-    Lines.circle(e.x, e.y, this.realRange(entity));
+    Draw.alpha(0.32);
+    Fill.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
+    Lines.stroke(1.5);
+    Draw.alpha(0.42);
+    Lines.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
+    Draw.reset();
   },
 
   update(tile){
     entity = tile.ent();
     linkedTile = Vars.world.tile(entity.link);
     rad = this.realRange(entity);
+    cryoValid = this.consumes.get(ConsumeType.liquid).valid(entity);
 
     this.super$update(tile);
 
-    entity._phaseHeat = Mathf.lerpDelta(entity._phaseHeat, Mathf.num(entity.cons.valid()), 0.1);
-    entity._radscl = Mathf.lerpDelta(entity._radscl, entity.cons.valid() ? 0 : 0.5, 0.05);
+    entity.setCryoHeat(Mathf.lerpDelta(entity.getCryoHeat(), Mathf.num(cryoValid), 0.1));
+    entity.setScl(Mathf.lerpDelta(entity.getScl(), entity.cons.valid() ? entity.getWarmup() : 0, 0.05));
+    entity.setWarmup(Mathf.lerpDelta(entity.getWarmup(), entity.efficiency(), 0.1));
 
-    if(linkedTile != null && entity.cons.valid()){
-      if(entity.getState() == "bullet"){
-        Vars.bulletGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(b => {
-          if(b == null) return;
-          if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, rad)){
-            Effects.effect(fx.bulletCircleIn, b.x, b.y);
-            b.set(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
-            Effects.effect(fx.bulletCircleOut, linkedTile.drawx(), linkedTile.drawy());
-          }
-        }));
-      }
+    if(cryoValid && entity.power.status > 0 && entity.timer.get(this.cryoTimer, this.cryoConsumeTimer) && entity.efficiency() > 0) entity.cons.trigger();
 
-      if(entity.getState() == "unit"){
-        Vars.unitGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(unit => {
-          if(unit.isDead()) return;
-          if(Mathf.within(tile.drawx(), tile.drawy(), unit.x, unit.y, rad)){
-            if(entity.timer.get(this.teleTimer, 180)){
-              Effects.effect(fx.unitCircleIn, unit.x, unit.y);
-              unit.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
-              Effects.effect(fx.unitCircleOut, unit.x, unit.y);
+    try {
+      //if(linkedTile != null && entity.cons.valid()){
+        //if(entity.getState() == "bullet"){
+          Vars.bulletGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(b => {
+            if(b == null) return;
+            if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, rad)){
+              Effects.effect(fx.bulletCircleIn, b.x, b.y);
+              b.set(linkedTile.drawx(), linkedTile.drawy());
+              Effects.effect(fx.bulletCircleOut, linkedTile.drawx(), linkedTile.drawy());
             }
-          }
-        }));
-      }
+          }));
+        //}
 
-      if(entity.getState() == "player"){
-        Vars.playerGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(player => {
-          if(player.isDead()) return;
-          if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)){
-            if(entity.timer.get(this.teleTimer, 180)){
-              Effects.effect(fx.unitCircleIn, player.x, player.y);
-              player.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
-              Effects.effect(fx.unitCircleOut, player.x, player.y);
+        //if(entity.getState() == "unit"){
+          Vars.unitGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(unit => {
+            if(unit.isDead()) return;
+            if(Mathf.within(tile.drawx(), tile.drawy(), unit.x, unit.y, rad)){
+              if(entity.timer.get(this.teleTimer, 180)){
+                Effects.effect(fx.unitCircleIn, unit.x, unit.y);
+                unit.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
+                Effects.effect(fx.unitCircleOut, unit.x, unit.y);
+              }
             }
-          }
-        }));
-      }
+          }));
+        //}
+
+        //if(entity.getState() == "player"){
+          Vars.playerGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(player => {
+            if(player.isDead()) return;
+            if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)){
+              if(entity.timer.get(this.teleTimer, 180)){
+                Effects.effect(fx.unitCircleIn, player.x, player.y);
+                player.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
+                Effects.effect(fx.unitCircleOut, player.x, player.y);
+              }
+            }
+          }));
+        //}
+      //}
+    } catch(err){
+      print(err);
     }
   }
 });
@@ -85,28 +107,46 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
 teleporter.size = 1;
 teleporter.solid = true;
 teleporter.hasItems = true;
+teleporter.hasLiquids = true;
 teleporter.range = 30;
-teleporter.teleRange = 3;
-teleporter.telePhaseRange = 6;
+teleporter.teleRange = 2;
+teleporter.teleCryoRange = 2;
+teleporter.cryoTimer = teleporter.timers++;
+teleporter.cryoConsumeTimer = 360;
 teleporter.teleTimer = teleporter.timers++;
-teleporter.layer2 = Layer.power;
 teleporter.requirements = ItemStack.with(Items.lead, 15, Items.graphite, 15, Items.surgealloy, 10);
 teleporter.category = Category.effect;
 teleporter.buildVisibility = BuildVisibility.shown;
+teleporter.consumes.liquid(Liquids.cryofluid, 0.1).boost();
 teleporter.consumes.power(1.15);
 teleporter.entityType = prov(() => {
   const entity = extend(ItemBridge.ItemBridgeEntity, {
-    _phaseHeat: 0,
-    _radscl: 0,
-
-    getState(){
-      return this._state;
+    getCryoHeat(){
+      return this._cryoHeat;
     },
 
-    setState(string){
-      this._state = string;
+    setCryoHeat(float){
+      this._cryoHeat = float;
+    },
+
+    getScl(){
+      return this._scl;
+    },
+
+    setScl(float){
+      this._scl = float;
+    },
+
+    getWarmup(){
+      return this._warmup;
+    },
+
+    setWarmup(float){
+      this._warmup = float;
     }
   });
-  entity.setState("player");
+  entity.setWarmup(0);
+  entity.setScl(0);
+  entity.setCryoHeat(0);
   return entity;
 });
