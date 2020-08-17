@@ -43,7 +43,7 @@ sCrafter.hasItems = true;
 sCrafter.hasPower = true;
 sCrafter.requirements = ItemStack.with(Items.copper, 60, Items.lead, 40, Items.titanium, 35);
 sCrafter.consumes.item(Items.sand, 1);
-sCrafter.consumes.power(1.15);
+sCrafter.consumes.power(3.4);
 sCrafter.outputItem = new ItemStack(Items.scrap, 1);
 sCrafter.category = Category.crafting;
 sCrafter.buildVisibility = BuildVisibility.shown;
