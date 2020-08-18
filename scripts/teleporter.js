@@ -58,9 +58,10 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     entity.setWarmup(Mathf.lerpDelta(entity.getWarmup(), entity.efficiency(), 0.1));
 
     if(cryoValid && entity.power.status > 0 && entity.timer.get(this.cryoTimer, this.cryoConsumeTimer) && entity.efficiency() > 0) entity.cons.trigger();
+    if(linkedTile == null) return;
 
     try {
-      //if(linkedTile != null && entity.cons.valid()){
+      if(linkedTile.block() == teleporter && entity.cons.valid()){
         //if(entity.getState() == "bullet"){
           Vars.bulletGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(b => {
             if(b == null) return;
@@ -75,7 +76,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
         //if(entity.getState() == "unit"){
           Vars.unitGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(unit => {
             if(unit.isDead()) return;
-            if(Mathf.within(tile.drawx(), tile.drawy(), unit.x, unit.y, rad)){
+            if(Mathf.within(tile.drawx(), tile.drawy(), unit.x, unit.y, rad) && unit.getTeam() == tile.getTeam()){
               if(entity.timer.get(this.teleTimer, 180)){
                 Effects.effect(fx.unitCircleIn, unit.x, unit.y);
                 unit.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
@@ -88,7 +89,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
         //if(entity.getState() == "player"){
           Vars.playerGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(player => {
             if(player.isDead()) return;
-            if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)){
+            if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)  && player.getTeam() == tile.getTeam()){
               if(entity.timer.get(this.teleTimer, 180)){
                 Effects.effect(fx.unitCircleIn, player.x, player.y);
                 player.moveBy(linkedTile.drawx() - tile.drawx(), linkedTile.drawy() - tile.drawy());
@@ -97,7 +98,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
             }
           }));
         //}
-      //}
+      }
     } catch(err){
       print(err);
     }
