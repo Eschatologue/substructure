@@ -4,22 +4,6 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     this.super$load();
   },
 
-  /*buildConfiguration(tile, table){
-    entity = tile.ent();
-
-    table.addImageButton(Icon.defense, Styles.clearTransi, run(() => {
-      entity.setState("bullet");
-    })).size(50).disabled(boolf(b => entity.power.status < 1));
-
-    table.addImageButton(Icon.units, Styles.clearTransi, run(() => {
-      entity.setState("unit");
-    })).size(50).disabled(boolf(b => entity.power.status < 1));
-
-    table.addImageButton(Icon.players, Styles.clearTransi, run(() => {
-      entity.setState("player");
-    })).size(50).disabled(boolf(b => entity.power.status < 1));
-  },*/
-
   realRange(entity){
     return ((this.teleRange + entity.getCryoHeat() * this.teleCryoRange) * entity.getScl()) * Vars.tilesize;
   },
@@ -32,16 +16,14 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
   drawLayer(tile){
     entity = tile.ent();
     rad = this.realRange(entity);
-    g = 0.03;
-    r = 0.06;
 
     this.super$drawLayer(tile);
     Draw.color(Color.valueOf("a387ea"));
-    Draw.alpha(0.32);
-    Fill.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
-    Lines.stroke(1.5);
     Draw.alpha(0.42);
-    Lines.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
+    Fill.circle(tile.drawx(), tile.drawy(), rad);
+    Lines.stroke(1.5);
+    Draw.alpha(0.52);
+    Lines.circle(tile.drawx(), tile.drawy(), rad);
     Draw.reset();
   },
 

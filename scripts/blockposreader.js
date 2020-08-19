@@ -9,13 +9,6 @@ const bPReader = extendContent(MessageBlock, "block-position-reader", {
     Draw.rect(this.topRegion, tile.drawx(), tile.drawy(), tile.rotation() * 90);
   },
 
-  generateIcons(){
-    return [
-      Core.atlas.find(this.name),
-      Core.atlas.find(this.name + "-top")
-    ]
-  },
-
   configured(tile, player, value){
     set = [
       (tile, player) => Call.setMessageBlockText(null, tile, tile.x + ", " + tile.y),

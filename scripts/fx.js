@@ -13,14 +13,14 @@ module.exports = {
     Lines.circle(e.x, e.y, e.fin() * 6);
   }),
 
-  unitCircleIn: newEffect(38, e => { //Unit (and player) going in teleport effect
+  unitCircleIn: newEffect(28, e => { //Unit (and player) going in teleport effect
     Draw.color(telePurple[0], telePurple[2], e.fin());
     Lines.stroke(e.fout() * 3.6);
     Lines.circle(e.x, e.y, e.fout() * 20);
     Lines.circle(e.x, e.y, e.fout() * 12);
   }),
 
-  unitCircleOut: newEffect(38, e => { //Unit (and player) going out teleport effect
+  unitCircleOut: newEffect(28, e => { //Unit (and player) going out teleport effect
     Draw.color(telePurple[0], telePurple[2], e.fin());
     Lines.stroke(e.fout() * 3.6);
     Lines.circle(e.x, e.y, e.fin() * 20);

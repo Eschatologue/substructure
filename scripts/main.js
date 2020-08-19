@@ -8,12 +8,13 @@
 //Distribution
   require("powerjunction");
 
+//Utility
+  require("blockposreader");
+  require("blockhealthreader");
+
 //Effect
   require("displayvault");
   require("teleporter");
-
-//Utility
-  require("blockposreader");
 
 //Others
   require("init");
