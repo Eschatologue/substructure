@@ -5,7 +5,13 @@ const bHReader = extendContent(MessageBlock, "block-health-reader", {
   },
 
   buildConfiguration(tile, table){
+    table.addImageButton(Icon.add, run(() => {
+      tile.configure(0);
+    })).size(40);
+  },
 
+  configured(tile, player, value){
+    if(tile.front() instanceof HealthTrait) Call.setMessageBlockText(null, tile, tile.front().ent().health());
   },
 
   draw(tile){
@@ -17,7 +23,6 @@ const bHReader = extendContent(MessageBlock, "block-health-reader", {
     entity = tile.ent();
 
     this.super$update(tile);
-    Call.setMessageBlockText(null, tile, tile.front().ent().health());
   }
 });
 

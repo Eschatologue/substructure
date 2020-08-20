@@ -19,13 +19,13 @@ const bPReader = extendContent(MessageBlock, "block-position-reader", {
   },
 
   buildConfiguration(tile, table){
-    table.addImageButton(Icon.commandRally, Styles.clearTransi, run(() => {
+    table.addImageButton(Icon.commandRally, run(() => {
       tile.configure(0);
-    })).size(50);
+    })).size(40);
 
-    table.addImageButton(Icon.up, Styles.clearTransi, run(() => {
+    table.addImageButton(Icon.up, run(() => {
       tile.configure(1);
-    })).size(50);
+    })).size(40);
   }
 });
 

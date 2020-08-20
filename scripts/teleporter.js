@@ -46,7 +46,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
       if(linkedTile.block() == teleporter && entity.cons.valid()){
         //if(entity.getState() == "bullet"){
           Vars.bulletGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(b => {
-            if(b == null) return;
+            if(b == null || b.getTeam() != tile.getTeam()) return;
             if(Mathf.within(tile.drawx(), tile.drawy(), b.x, b.y, rad)){
               Effects.effect(fx.bulletCircleIn, b.x, b.y);
               b.set(linkedTile.drawx(), linkedTile.drawy());
@@ -57,7 +57,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
 
         //if(entity.getState() == "unit"){
           Vars.unitGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(unit => {
-            if(unit.isDead()) return;
+            if(unit.isDead() || unit.getTeam() != tile.getTeam()) return;
             if(Mathf.within(tile.drawx(), tile.drawy(), unit.x, unit.y, rad) && unit.getTeam() == tile.getTeam()){
               if(entity.timer.get(this.teleTimer, 180)){
                 Effects.effect(fx.unitCircleIn, unit.x, unit.y);
@@ -70,7 +70,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
 
         //if(entity.getState() == "player"){
           Vars.playerGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(player => {
-            if(player.isDead()) return;
+            if(player.isDead() && player.getTeam() != tile.getTeam()) return;
             if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)  && player.getTeam() == tile.getTeam()){
               if(entity.timer.get(this.teleTimer, 180)){
                 Effects.effect(fx.unitCircleIn, player.x, player.y);

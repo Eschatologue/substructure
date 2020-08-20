@@ -5,9 +5,6 @@
 //Liquid
   require("optionalpump");
 
-//Distribution
-  require("powerjunction");
-
 //Utility
   require("blockposreader");
   require("blockhealthreader");
