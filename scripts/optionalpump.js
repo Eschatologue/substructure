@@ -16,7 +16,7 @@ const oPump = extendContent(SolidPump, "optional-pump", {
   setStats(){
     this.super$setStats();
     this.stats.add(BlockStat.productionTime, this.craftTime / 60, StatUnit.seconds);
-    this.stats.add(BlockStat.output. this.outputItem);
+    this.stats.add(BlockStat.output, this.outputItem);
   },
 
   draw(tile){
@@ -36,41 +36,52 @@ const oPump = extendContent(SolidPump, "optional-pump", {
 
   update(tile){
     entity = tile.ent();
+    itemValid = this.consumes.get(ConsumeType.item).valid(entity);
+    liquidValid = this.consumes.get(ConsumeType.liquid).valid(entity);
 
-    if(entity.getMode() == "crafter"){
-      if(entity.cons.valid()){
-        entity.setProgress(entity.getProgress() += this.getProgIncrease(entity, this.craftTime));
-        entity.setWarmup(Mathf.lerpDelta(entity.warmup, 1, 0.02));
-      } else {
-        entity.setWarmup(Mathf.lerp(entity.warmup, 0, 0.02));
-      }
-
-      if(entity.getProgress() >= 1){
-        entity.cons.trigger();
-
-        if(this.outputItem != null) useContent(tile, this.outputItem.item);
-
-        Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
-        entity.setProgress(0);
-      }
-
-      if(this.outputItem != null && tile.entity.timer.get(this.timerDump, this.dumpTime)){
-          this.tryDump(tile, this.outputItem.item);
-      }
+    if(itemValid && liquidValid){
+      entity.setProgress(entity.getProgress() + this.getProgIncrease(entity, this.craftTime));
+      entity.setWarmup(Mathf.lerpDelta(entity.warmup, 1, 0.02));
+    } else {
+      entity.setWarmup(Mathf.lerp(entity.warmup, 0, 0.02));
     }
 
-    if(entity.getMode())
+    if(entity.getProgress() >= 1){
+      entity.cons.trigger();
+
+      if(this.outputItem != null){
+        this.useContent(tile, this.outputItem.item);
+        for(i = 0; i < this.outputItem.amount; i++){
+            this.offloadNear(tile, this.outputItem.item);
+        }
+      }
+
+      Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
+      entity.setProgress(0);
+    }
+
+    if(this.outputItem != null && tile.entity.timer.get(this.timerDump, this.dumpTime)){
+        this.tryDump(tile, this.outputItem.item);
+    }
+
+    this.super$update(tile);
   }
 });
 
 oPump.size = 3;
-oPump.result = Liquids.oil;
 oPump.updateEffect = Fx.none;
 oPump.updateEffectChance = 0;
-oPunp.category = Category.production;
+oPump.category = Category.production;
 oPump.buildVisibility = BuildVisibility.shown;
+oPump.requirements = ItemStack.with(Items.copper, 170, Items.lead, 115, Items.graphite, 150, Items.titanium, 90, Items.silicon, 65);
+oPump.attribute = Attribute.oil;
+oPump.result = Liquids.oil;
+oPump.pumpAmount = 0.18;
+oPump.outputItem = new ItemStack(Items.plastanium, 1);
+oPump.craftEffect = Fx.smeltsmoke;
+oPump.craftTime = 60;
 oPump.consumes.item(Items.titanium, 2).optional(true, false);
-oPump.consumes.liquid(Liquids.oil, 0.25).optional(true, false);
+oPump.consumes.liquid(Liquids.oil, 0.15).optional(true, false);
 oPump.consumes.power(3.45);
 oPump.entityType = prov(() => {
   const entity = extend(SolidPump.SolidPumpEntity, {
