@@ -1,3 +1,4 @@
+//TODO configurable item display by first item and highest amount
 const displayVault = extendContent(Vault, "display-vault", {
   load(){
     this.region = Core.atlas.find(this.name);

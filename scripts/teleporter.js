@@ -1,9 +1,5 @@
 const fx = require("fx");
 const teleporter = extendContent(ItemBridge, "teleporter", {
-  load(){
-    this.super$load();
-  },
-
   realRange(entity){
     return ((this.teleRange + entity.getCryoHeat() * this.teleCryoRange) * entity.getScl()) * Vars.tilesize;
   },
@@ -70,7 +66,7 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
 
         //if(entity.getState() == "player"){
           Vars.playerGroup.intersect(tile.drawx() - rad, tile.drawy() - rad, rad * 2, rad * 2, cons(player => {
-            if(player.isDead() && player.getTeam() != tile.getTeam()) return;
+            if(player.isDead() || player.getTeam() != tile.getTeam()) return;
             if(Mathf.within(tile.drawx(), tile.drawy(), player.x, player.y, rad)  && player.getTeam() == tile.getTeam()){
               if(entity.timer.get(this.teleTimer, 180)){
                 Effects.effect(fx.unitCircleIn, player.x, player.y);

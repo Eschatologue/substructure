@@ -1,3 +1,4 @@
+//TODO finish
 const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   load(){
     this.region = Core.atlas.find(this.name + "-icon");
@@ -6,7 +7,7 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
     this.outputRegion = [];
     for(var i = 1; i < 4; i++){
       this.inputRegion.push(Core.atlas.find(this.name + "-i-" + i));
-      this.outputRegion.push(Core.atlas.find(this.name + "-o-" + i))
+      this.outputRegion.push(Core.atlas.find(this.name + "-o-" + i));
     }
   },
 
@@ -19,15 +20,11 @@ const sCrafter = extendContent(GenericCrafter, "selective-crafter", {
   },
 
   draw(tile){
-    entity = tile.ent();
     front = tile.front();
+    frame = front.entity.clogHeat <= 0.5 ? Mathf.floor((((Time.time() * front.speed * 8 * front.entity.timeScale)) % 4)) : 0;
+    entity = tile.ent();
 
-    if(front.block() instanceof Conveyor){
-      Draw.rect(this.outputRegion[Mathf.clamp(front.draw.frame, 0, this.outputRegion[0].length - 1)], tile.drawx(), tile.drawy());
-    } /*else {
-      Draw.rect(this.inputRegion[0], tile.drawx(), tile.drawy());
-      Draw.rect(this.outputRegion[0], tile.drawx(), tile.drawy());
-    }*/
+    Draw.rect(this.outputRegion[Mathf.clamp(frame, 0, this.outputRegion.length)], tile.drawx(), tile.drawy());
 
     Draw.rect(this.baseRegion, tile.drawx(), tile.drawy());
   },
