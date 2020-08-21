@@ -1,3 +1,5 @@
+importPackage(Packages.arc.graphics.gl);
+const teleBuffer = new FrameBuffer(2, 2);
 const fx = require("fx");
 const teleporter = extendContent(ItemBridge, "teleporter", {
   realRange(entity){
@@ -14,13 +16,24 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     rad = this.realRange(entity);
 
     this.super$drawLayer(tile);
+
+    if(!Core.graphics.isHidden() && (teleBuffer.getWidth() != Core.graphics.getWidth() || teleBuffer.getHeight() != Core.graphics.getHeight())){
+        teleBuffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+    }
+
+    Draw.flush();
+    teleBuffer.begin();
+    Core.graphics.clear(Color.clear);
     Draw.color(Color.valueOf("a387ea"));
-    Draw.alpha(0.42);
-    Fill.circle(tile.drawx(), tile.drawy(), rad);
-    Lines.stroke(1.5);
-    Draw.alpha(0.52);
-    Lines.circle(tile.drawx(), tile.drawy(), rad);
-    Draw.reset();
+    Fill.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
+    Draw.color();
+    Draw.flush();
+    teleBuffer.end();
+    Draw.shader(Shaders.shield);
+    Draw.color(Color.valueOf("a387ea"));
+    Draw.rect(Draw.wrap(teleBuffer.getTexture()), Core.camera.position.x, Core.camera.position.y, Core.camera.width, -Core.camera.height);
+    Draw.color();
+    Draw.shader();
   },
 
   update(tile){

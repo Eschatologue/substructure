@@ -37,32 +37,41 @@ const oPump = extendContent(SolidPump, "optional-pump", {
   update(tile){
     entity = tile.ent();
 
-    if(entity.cons.valid()){
-      entity.setProgress(entity.getProgress() += this.getProgIncrease(entity, this.craftTime));
-      entity.setWarmup(Mathf.lerpDelta(entity.warmup, 1, 0.02));
-
-      if(Mathf.chance(Time.delta() * this.updateEffectChance)){
-        Effects.effect(this.updateEffect, entity.x + Mathf.range(this.size * 4), entity.y + Mathf.range(this.size * 4));
+    if(entity.getMode() == "crafter"){
+      if(entity.cons.valid()){
+        entity.setProgress(entity.getProgress() += this.getProgIncrease(entity, this.craftTime));
+        entity.setWarmup(Mathf.lerpDelta(entity.warmup, 1, 0.02));
+      } else {
+        entity.setWarmup(Mathf.lerp(entity.warmup, 0, 0.02));
       }
-    } else {
-      entity.setWarmup(Mathf.lerp(entity.warmup, 0, 0.02));
+
+      if(entity.getProgress() >= 1){
+        entity.cons.trigger();
+
+        if(this.outputItem != null) useContent(tile, this.outputItem.item);
+
+        Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
+        entity.setProgress(0);
+      }
+
+      if(this.outputItem != null && tile.entity.timer.get(this.timerDump, this.dumpTime)){
+          this.tryDump(tile, this.outputItem.item);
+      }
     }
 
-    if(entity.getProgress() >= 1){
-      entity.cons.trigger();
-
-      if(this.outputItem != null) useContent(tile, this.outputItem.item);
-
-      Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
-      entity.setProgress(0);
-    }
-
-    if(this.outputItem != null && tile.entity.timer.get(this.timerDump, this.dumpTime)){
-        this.tryDump(tile, this.outputItem.item);
-    }
+    if(entity.getMode())
   }
 });
 
+oPump.size = 3;
+oPump.result = Liquids.oil;
+oPump.updateEffect = Fx.none;
+oPump.updateEffectChance = 0;
+oPunp.category = Category.production;
+oPump.buildVisibility = BuildVisibility.shown;
+oPump.consumes.item(Items.titanium, 2).optional(true, false);
+oPump.consumes.liquid(Liquids.oil, 0.25).optional(true, false);
+oPump.consumes.power(3.45);
 oPump.entityType = prov(() => {
   const entity = extend(SolidPump.SolidPumpEntity, {
     getWarmup(){
