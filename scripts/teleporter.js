@@ -11,29 +11,50 @@ const teleporter = extendContent(ItemBridge, "teleporter", {
     Lines.dashCircle(tile.drawx(), tile.drawy(), this.realRange(tile.ent()));
   },
 
+  drawShader(tile){
+    Draw.color(Color.valueOf("a387ea"));
+    Fill.circle(tile.drawx(), tile.drawy(), this.realRange(tile.ent()));
+    Draw.color();
+  },
+
+  drawSimple(tile){
+    entity = tile.ent();
+    rad = this.realRange(entity);
+
+    Draw.color(Color.valueOf("a387ea"));
+    Lines.stroke(1.5);
+    Draw.alpha(0.09 + 0.08 * 1 / 5 * Time.delta());
+    Fill.circle(tile.drawx(), tile.drawy(), rad);
+    Draw.alpha(1);
+    Lines.circle(tile.drawx(), tile.drawy(), rad);
+    Draw.reset();
+  },
+
   drawLayer(tile){
     entity = tile.ent();
     rad = this.realRange(entity);
 
     this.super$drawLayer(tile);
 
-    if(!Core.graphics.isHidden() && (teleBuffer.getWidth() != Core.graphics.getWidth() || teleBuffer.getHeight() != Core.graphics.getHeight())){
-        teleBuffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-    }
+    if(Core.settings.getBool("animatedshields")){
+      if(!Core.graphics.isHidden() && (teleBuffer.getWidth() != Core.graphics.getWidth() || teleBuffer.getHeight() != Core.graphics.getHeight())){
+          teleBuffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+      }
 
-    Draw.flush();
-    teleBuffer.begin();
-    Core.graphics.clear(Color.clear);
-    Draw.color(Color.valueOf("a387ea"));
-    Fill.circle(tile.drawx(), tile.drawy(), this.realRange(entity));
-    Draw.color();
-    Draw.flush();
-    teleBuffer.end();
-    Draw.shader(Shaders.shield);
-    Draw.color(Color.valueOf("a387ea"));
-    Draw.rect(Draw.wrap(teleBuffer.getTexture()), Core.camera.position.x, Core.camera.position.y, Core.camera.width, -Core.camera.height);
-    Draw.color();
-    Draw.shader();
+      Draw.flush();
+      teleBuffer.begin();
+      Core.graphics.clear(Color.clear);
+      this.drawShader(tile);
+      Draw.flush();
+      teleBuffer.end();
+      Draw.shader(Shaders.shield);
+      Draw.color(Color.valueOf("a387ea"));
+      Draw.rect(Draw.wrap(teleBuffer.getTexture()), Core.camera.position.x, Core.camera.position.y, Core.camera.width, -Core.camera.height);
+      Draw.color();
+      Draw.shader();
+    } else {
+      this.drawSimple(tile);
+    }
   },
 
   update(tile){
