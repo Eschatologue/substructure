@@ -1,4 +1,3 @@
-//TODO complete
 const oPump = extendContent(SolidPump, "optional-pump", {
   load(){
     this.region = Core.atlas.find(this.name);
@@ -47,17 +46,17 @@ const oPump = extendContent(SolidPump, "optional-pump", {
     }
 
     if(entity.getProgress() >= 1){
-      entity.cons.trigger();
-
-      if(this.outputItem != null){
+      if(this.outputItem != null && entity.items.get(this.outputItem.item) < this.itemCapacity){
+        entity.cons.trigger();
         this.useContent(tile, this.outputItem.item);
+        
         for(i = 0; i < this.outputItem.amount; i++){
             this.offloadNear(tile, this.outputItem.item);
         }
-      }
 
-      Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
-      entity.setProgress(0);
+        Effects.effect(this.craftEffect, tile.drawx(), tile.drawy());
+        entity.setProgress(0);
+      }
     }
 
     if(this.outputItem != null && tile.entity.timer.get(this.timerDump, this.dumpTime)){
@@ -73,15 +72,16 @@ oPump.updateEffect = Fx.none;
 oPump.updateEffectChance = 0;
 oPump.category = Category.production;
 oPump.buildVisibility = BuildVisibility.shown;
+oPump.liquidCapacity = 30;
 oPump.requirements = ItemStack.with(Items.copper, 170, Items.lead, 115, Items.graphite, 150, Items.titanium, 90, Items.silicon, 65);
 oPump.attribute = Attribute.oil;
 oPump.result = Liquids.oil;
-oPump.pumpAmount = 0.18;
+oPump.pumpAmount = 0.26;
 oPump.outputItem = new ItemStack(Items.plastanium, 1);
 oPump.craftEffect = Fx.smeltsmoke;
 oPump.craftTime = 60;
 oPump.consumes.item(Items.titanium, 2).optional(true, false);
-oPump.consumes.liquid(Liquids.oil, 0.15).optional(true, false);
+oPump.consumes.liquid(Liquids.oil, 0.25).optional(true, false);
 oPump.consumes.power(3.45);
 oPump.entityType = prov(() => {
   const entity = extend(SolidPump.SolidPumpEntity, {
