@@ -25,5 +25,51 @@ module.exports = {
     Lines.stroke(e.fout() * 3.6);
     Lines.circle(e.x, e.y, e.fin() * 20);
     Lines.circle(e.x, e.y, e.fin() * 12);
-  })
+  }),
+
+	chargeLaserHit: newEffect(12, e => { //Charge turret laser hit effect
+		Draw.color(Pal.meltdownHit);
+		Lines.stroke(e.fout() * 1.5);
+
+		Angles.randLenVectors(e.id, 8, e.finpow() * 17, e.rotation, 360, new Floatc2({get: function(x, y){
+				ang = Mathf.angle(x, y);
+				Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 4 + 1);
+			}})
+		);
+	}),
+
+	chargeLaserShoot: newEffect(21, e => { //Charge turret shoot effect
+  	Draw.color(Pal.meltdownHit);
+
+ 		for(var i = 0; i < 2; i++){
+  	 	var l = Mathf.signs[i];
+  	 	Drawf.tri(e.x, e.y, 4 * e.fout(), 29, e.rotation + 67 * l);
+  	}
+	}),
+
+  chargeLaserShootSmoke: newEffect(26, e => { //Charge turret laser smoke effect
+    Draw.color(Pal.meltdownHit);
+
+    Angles.randLenVectors(e.id, 7, 80, e.rotation, 0, new Floatc2({get: function(x, y){
+        Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fout() * 9);
+      }})
+    );
+  }),
+
+	chargeLaserCharge: newEffect(38, e => { //Charge turret charging effect
+		Draw.color(Pal.meltdownHit);
+
+		Angles.randLenVectors(e.id, 2, 1 + 20 * e.fout(), e.rotation, 120, new Floatc2({get: function(x, y){
+				Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 3 + 1);
+     	}})
+		);
+	}),
+
+	chargeLaserChargeBegin: newEffect(71, e => { //Charge turret begin charging effect
+		Draw.color(Pal.meltdownHit);
+		Fill.circle(e.x, e.y, e.fin() * 3);
+
+		Draw.color();
+		Fill.circle(e.x, e.y, e.fin() * 2);
+	})
 }

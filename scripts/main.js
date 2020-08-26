@@ -1,3 +1,6 @@
+//Turret
+	require("chargeturret");
+
 //Production
   require("selectivecrafter");
   require("multioutputcrafter");
@@ -13,6 +16,6 @@
   require("displayvault");
   require("teleporter");
 
-//Others
+//Other
   require("init");
   require("fx");
