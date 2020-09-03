@@ -1,1 +1,0 @@
-print("turret 2");

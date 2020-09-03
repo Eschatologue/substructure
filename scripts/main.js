@@ -1,12 +1,17 @@
+this.global.substructure = {};
+
 /* File "handler" */
 function loadFile(array, dir){
 	for(var file of array){
-		require("substructure/" + dir + "/" + file);
-		print("Successfully loaded " + file + ".js");
+		this.global.substructure[file] = require("substructure/" + dir + "/" + file);
+		print("Loaded " + file + ".js in substructure/" + dir);
 	}
 }
 
-var turrets = ["chargeturret", "chargeturretii"];
+var libraries = ["fx"];
+loadFile(libraries, "lib");
+
+var turrets = ["chargeturret"];
 loadFile(turrets, "turrets");
 
 var units = ["shieldunit"];
