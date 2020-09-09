@@ -27,7 +27,6 @@ const laserBullet = extend(BasicBulletType, {
 		Draw.reset();
 	}
 });
-
 laserBullet.lifetime = 16;
 laserBullet.hitSize = 4;
 laserBullet.pierce = true;
@@ -37,7 +36,6 @@ laserBullet.hitEffect = fx.chargeLaserHit;
 laserBullet.laserLength = 170;
 
 const chargeTurret = extendContent(ChargeTurret, "charge-turret", {});
-
 chargeTurret.size = 2;
 chargeTurret.health = 1240;
 chargeTurret.requirements = ItemStack.with(Items.copper, 65, Items.lead, 50, Items.graphite, 45, Items.silicon, 40);
