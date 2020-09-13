@@ -15,8 +15,11 @@ const loadFiles = (arr, dir) => {
 var libraries = ["fx"];
 loadFiles(libraries, "lib");
 
-var effect = ["blockposreader"];
-loadFiles(effect, "effect");
+var logic = ["blockposreader", "blockremover"];
+loadFiles(logic, "logic");
+
+var defense = ["perennialwalls"];
+loadFiles(defense, "defense");
 
 var turret = ["chargeturret"];
 loadFiles(turret, "turret");
