@@ -7,15 +7,15 @@ const loadFiles = (arr, dir) => {
 		var file = arr[i];
 
 		this.global.substructure[file] = require("substructure/" + dir + "/" + file);
-		i + 1 == arr.length ? loaded += file + ".js " : loaded += file + ".js, ";
+		//i + 1 == arr.length ? loaded += file + ".js " : loaded += file + ".js, ";
 	}
-	print("Loaded " + loaded + "in the \`" + dir + "\` directory.");
+	//print("Loaded " + loaded + "in the \`" + dir + "\` directory.");
 }
 
 var libraries = ["fx"];
 loadFiles(libraries, "lib");
 
-var logic = ["blockposreader", "blockremover"];
+var logic = ["unitspawner", "blockposreader", "blockremover"];
 loadFiles(logic, "logic");
 
 var defense = ["perennialwalls"];
@@ -26,3 +26,5 @@ loadFiles(turret, "turret");
 
 var units = ["shieldunit"];
 loadFiles(units, "units");
+
+print("Successfully loaded all files in Gdeft/substructure.")
