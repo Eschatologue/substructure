@@ -23,7 +23,7 @@ const laserBullet = extend(BasicBulletType, {
         		Lines.lineAngle(b.x, b.y, b.rotation(), baseLen * lenscales[i]);
      	    }
 		}
-		Drawf.light();
+		Drawf.light(Team.derelict, b.x, b.y, b.x + Tmp.v1.x, b.y + Tmp.v1.y, 15f * b.fout(), colors[0], 0.6f);
 		Draw.reset();
 	}
 });

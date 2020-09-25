@@ -12,7 +12,7 @@ const loadFiles = (arr, dir) => {
 	//print("Loaded " + loaded + "in the \`" + dir + "\` directory.");
 }
 
-var libraries = ["fx"];
+var libraries = ["fx", "dialog"];
 loadFiles(libraries, "lib");
 
 var logic = ["unitspawner", "blockposreader", "blockremover"];

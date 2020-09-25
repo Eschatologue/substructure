@@ -1,3 +1,5 @@
+const dlib = this.global.substructure.dialog;
+
 const unitSpawner = extendContent(MessageBlock, "unit-spawner", {});
 unitSpawner.size = 1;
 unitSpawner.solid = false;
@@ -66,8 +68,7 @@ unitSpawner.buildType = () => {
 				t.add("$dialog.title.select-unit").growX().center().color(Pal.accent);
 				t.row();
 				t.image().fillX().height(3).pad(4).color(Pal.accent);
-			})).width(800).center();
-			cont.row();
+			})).width(800).center().row();
 			
 			cont.pane(cons(p => {
 				var ru = 0;
@@ -84,8 +85,7 @@ unitSpawner.buildType = () => {
 
 					if(++ru % 3 == 0) p.row();
 				}));
-			})).width(800).height(540).top().center();
-			cont.row();
+			})).width(800).height(540).top().center().row();
 			
 			cont.table(cons(i => {
 				i.table(cons(t => {
@@ -97,7 +97,7 @@ unitSpawner.buildType = () => {
 						this.posDialog();
 					}).width(220).pad(4).growY();
 				}));
-			})).width(560).bottom().center();
+			})).width(360).bottom().center();
 
 			dialog.addCloseButton();
 			dialog.show();
@@ -108,31 +108,76 @@ unitSpawner.buildType = () => {
 			var cont = dialog.cont;
 
 			cont.table(cons(t => {
-				t.add("Still in development.");
-			}));
+				t.top().margin(6);
+				t.add("$dialog.info.base-teams").growX().center().color(Pal.accent);
+				t.row();
+				t.image().fillX().height(3).pad(4).color(Pal.accent);
+			})).width(320).center().row();
 			
-			/*
+			cont.pane(cons(p => {
+				var rt = 0;
+				var teams = Team.baseTeams;
+				
+				for(var i in teams){
+					var team = teams[i];
+					
+					this.addTeamButton(p, team);
+					if(++rt % 3 == 0) p.row();
+				};
+			})).width(320).center().row();
+			
 			cont.table(cons(t => {
-				//TODO complete base team buttons
-			}));
-			*/
+				t.top().margin(6);
+				t.add("$dialog.info.all-teams").growX().center().color(Pal.accent);
+				t.row();
+				t.image().fillX().height(3).pad(4).color(Pal.accent);
+			})).width(320).center().row();
+			
+			cont.pane(cons(p => {
+				var rt = 0;
+				var teams = Team.all;
+				
+				for(var i in teams){
+					var team = teams[i];
+					
+					this.addTeamButton(p, team);
+					if(++rt % 3 == 0) p.row();
+				};
+			})).width(320).height(220).center().row();
+			
+			cont.table(cons(t => {
+				t.top().margin(6);
+				t.add("$dialog.info.others").growX().center().color(Pal.accent);
+				t.row();
+				t.image().fillX().height(3).pad(4).color(Pal.accent);
+			})).width(320).center().row();
+			
+			cont.table(cons(t => {
+				t.button("$dialog.info.reset-team", () => {
+					this.setTeam(this.team.id);
+				}).growX().height(54).row();
+				
+				t.button("$dialog.info.set-team-id", () => {
+					dlib.stringDialog("$excuse");
+				}).growX().height(54);
+			})).width(300);
 			
 			dialog.addCloseButton();
 			dialog.show();
 		},
 		
 		posDialog(){
-			var dialog = new BaseDialog("$dialog.title.select-position");
-			var cont = dialog.cont;
-			
-			cont.table(cons(t => {
-				t.add("Still in development.");
-			}));
-			
+			dlib.stringDialog("$excuse");
 			//TODO complete position configuring after fixing base team buttons
-			
-			dialog.addCloseButton();
-			dialog.show();
+		},
+
+		addTeamButton(p, team){
+			p.button(cons(b => {
+				b.left();
+				b.image().size(40).pad(2).color(team.color);
+			}), () => {
+				this.setTeam(team.id);
+			}).pad(2);
 		},
 
 		spawnUnit(unit, team, x, y){
