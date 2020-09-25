@@ -26,5 +26,3 @@ loadFiles(turret, "turret");
 
 var units = ["shieldunit"];
 loadFiles(units, "units");
-
-print("Successfully loaded all files in Gdeft/substructure.")

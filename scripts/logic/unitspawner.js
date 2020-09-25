@@ -58,66 +58,88 @@ unitSpawner.buildType = () => {
 		},
 
 		unitDialog(){
-			var dialog = new BaseDialog("Unit Configuration");
-			dialog.cont.table(cons(i => {
-				i.add(Core.bundle.get("dialog.info.selected-unit") + this.getUnit().localizedName).growX().color(Pal.accent);
-				i.row();
-				i.image().growX().height(3).pad(4).color(Pal.accent);
-				i.row();
-				i.button(cons(b => {
-					b.left();
-					b.add(Core.bundle.get("dialog.info.switch-team"));
-					b.row();
-					b.image().growX().height(6).pad(4).color(this.getTeam().color);
-
-					dialog.hide();
-					dialog.show();
-				}), () => {
-					this.setTeam((this.getTeam().id + 1) > 5 ? 0 : this.getTeam().id + 1);
-				}).growX();
-				i.row();
-				i.button(Core.bundle.get("dialog.short.back"), Icon.left, () => {
-					dialog.hide();
-				}).growX().align(Align.center).bottom();
-			})).growY().width(260);
-
-			dialog.cont.pane(cons(p => {
-				var r = 0;
+			var dialog = new BaseDialog("$dialog.name.unit-config");
+			var cont = dialog.cont;
+			
+			cont.table(cons(t => {
+				t.top().margin(6);
+				t.add("$dialog.title.select-unit").growX().center().color(Pal.accent);
+				t.row();
+				t.image().fillX().height(3).pad(4).color(Pal.accent);
+			})).width(800).center();
+			cont.row();
+			
+			cont.pane(cons(p => {
+				var ru = 0;
 				var units = Vars.content.units();
-
-				p.top().margin(6);
-				p.add(Core.bundle.get("dialog.title.select-unit")).growX().center().color(Pal.accent);
-				p.row();
-				p.image().growX().height(3).pad(4).color(Pal.accent);
-				p.row();
 				
 				units.each(cons(u => {
 					p.button(cons(b => {
 						b.left();
 						b.image(u.icon(Cicon.medium)).size(40).padRight(2);
 						b.add(u.localizedName);
-
-						dialog.hide();
-						dialog.show();
 					}), () => {
 						this.setUnit(u.id);
-					}).marginTop(16).marginLeft(16).marginRight(16).fillX();
+					}).margin(12).fillX();
 
-					if(++r % 3 == 0) p.row();
+					if(++ru % 3 == 0) p.row();
 				}));
-			})).height(720);
+			})).width(800).height(540).top().center();
+			cont.row();
+			
+			cont.table(cons(i => {
+				i.table(cons(t => {
+					t.button("$dialog.title.select-team", Icon.modeSurvival, () => {
+						this.teamDialog();
+					}).width(220).pad(4).growY();
+					
+					t.button("$dialog.title.select-position", Icon.grid, () => {
+						this.posDialog();
+					}).width(220).pad(4).growY();
+				}));
+			})).width(560).bottom().center();
 
+			dialog.addCloseButton();
+			dialog.show();
+		},
+		
+		teamDialog(){
+			var dialog = new BaseDialog("$dialog.title.select-team");
+			var cont = dialog.cont;
+
+			cont.table(cons(t => {
+				t.add("Still in development.");
+			}));
+			
+			/*
+			cont.table(cons(t => {
+				//TODO complete base team buttons
+			}));
+			*/
+			
+			dialog.addCloseButton();
+			dialog.show();
+		},
+		
+		posDialog(){
+			var dialog = new BaseDialog("$dialog.title.select-position");
+			var cont = dialog.cont;
+			
+			cont.table(cons(t => {
+				t.add("Still in development.");
+			}));
+			
+			//TODO complete position configuring after fixing base team buttons
+			
+			dialog.addCloseButton();
 			dialog.show();
 		},
 
 		spawnUnit(unit, team, x, y){
-			if(!Vars.net.client()){
-				var spawnUnit = unit.create(team);
-
-				spawnUnit.set(x, y);
-				spawnUnit.add();
-				this.configure("Created unit: " + unit.localizedName + " at " + (x / 8) + ", " + (y / 8));
-			};
+			var teamName = "[#" + team.color + "]" + team.name + "[]"; //There is no ${}
+			
+			unit.spawn(team, x, y);
+			this.configure("Created unit: [accent]" + unit.localizedName + "[] at " + (x / Vars.tilesize) + ", " + (y / Vars.tilesize) + " on the " + teamName + " team");
 		},
 		
 		writeBase(write){
