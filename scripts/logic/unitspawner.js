@@ -1,5 +1,3 @@
-const dlib = this.global.substructure.dialog;
-
 const unitSpawner = extendContent(MessageBlock, "unit-spawner", {});
 unitSpawner.size = 1;
 unitSpawner.solid = false;
@@ -109,7 +107,7 @@ unitSpawner.buildType = () => {
 
 			cont.table(cons(t => {
 				t.top().margin(6);
-				t.add("$dialog.info.base-teams").growX().center().color(Pal.accent);
+				t.add("$dialog.info.base-teams").growX().color(Pal.accent);
 				t.row();
 				t.image().fillX().height(3).pad(4).color(Pal.accent);
 			})).width(320).center().row();
@@ -128,7 +126,7 @@ unitSpawner.buildType = () => {
 			
 			cont.table(cons(t => {
 				t.top().margin(6);
-				t.add("$dialog.info.all-teams").growX().center().color(Pal.accent);
+				t.add("$dialog.info.all-teams").growX().color(Pal.accent);
 				t.row();
 				t.image().fillX().height(3).pad(4).color(Pal.accent);
 			})).width(320).center().row();
@@ -147,7 +145,7 @@ unitSpawner.buildType = () => {
 			
 			cont.table(cons(t => {
 				t.top().margin(6);
-				t.add("$dialog.info.others").growX().center().color(Pal.accent);
+				t.add("$dialog.short.others").growX().color(Pal.accent);
 				t.row();
 				t.image().fillX().height(3).pad(4).color(Pal.accent);
 			})).width(320).center().row();
@@ -155,11 +153,17 @@ unitSpawner.buildType = () => {
 			cont.table(cons(t => {
 				t.button("$dialog.info.reset-team", () => {
 					this.setTeam(this.team.id);
-				}).growX().height(54).row();
+				}).growX().height(54).pad(4).row();
 				
 				t.button("$dialog.info.set-team-id", () => {
-					dlib.stringDialog("$excuse");
-				}).growX().height(54);
+					Vars.ui.showTextInput("", "$dialog.short.set-id", 8, this.getTeam().id, true, cons(t => {
+						if(Team.get(t) != null){
+							this.setTeam(t);
+						}else{
+							Vars.ui.showErrorMessage("$dialog.short.invalid-id");
+						}
+					}));
+				}).growX().height(54).pad(4);
 			})).width(300);
 			
 			dialog.addCloseButton();
@@ -167,8 +171,50 @@ unitSpawner.buildType = () => {
 		},
 		
 		posDialog(){
-			dlib.stringDialog("$excuse");
-			//TODO complete position configuring after fixing base team buttons
+			var dialog = new BaseDialog("$dialog.title.select-position");
+			var cont = dialog.cont;
+			
+			cont.table(cons( t => {
+				t.button("$dialog.info.reset-position", () => {
+					this.setUnitX(this.getX());
+					this.setUnitY(this.getY());
+				}).growX().height(54).pad(4);
+			})).width(300).center().row();
+			
+			cont.table(cons(t => {
+				t.top().margin(6);
+				t.add("$dialog.info.custom-position").growX().color(Pal.accent);
+				t.row();
+				t.image().fillX().height(3).pad(4).color(Pal.accent);
+			})).width(320).center().row();
+			
+			cont.table(cons(t => {
+				var worldX = Vars.world.width();
+				var worldY = Vars.world.height();
+				
+				t.button("$dialog.short.set-x", () => {
+					Vars.ui.showTextInput("", "X:", 4, (this.getUnitX() / Vars.tilesize), true, cons(x => {
+						if(x <= worldX){
+							this.setUnitX(x * Vars.tilesize);
+						}else{
+							Vars.ui.showInfo("$dialog.error.invalid-pos");
+						};
+					}));
+				}).growX().height(54).pad(4).row();
+				
+				t.button("$dialog.short.set-y", () => {
+					Vars.ui.showTextInput("", "Y:", 4, (this.getUnitY() / Vars.tilesize), true, cons(y => {
+						if(y <= worldY){
+							this.setUnitY(y * Vars.tilesize);
+						}else{
+							Vars.ui.showInfo("$dialog.error.invalid-pos");
+						};
+					}));
+				}).growX().height(54).pad(4);
+			})).width(300).center();
+			
+			dialog.addCloseButton();
+			dialog.show();
 		},
 
 		addTeamButton(p, team){
@@ -180,11 +226,11 @@ unitSpawner.buildType = () => {
 			}).pad(2);
 		},
 
-		spawnUnit(unit, team, x, y){
-			var teamName = "[#" + team.color + "]" + team.name + "[]"; //There is no ${}
-			
+		spawnUnit(unit, team, x, y){ //There is no ${}
+			var teamColor = "[#" + team.color + "]";
+
 			unit.spawn(team, x, y);
-			this.configure("Created unit: [accent]" + unit.localizedName + "[] at " + (x / Vars.tilesize) + ", " + (y / Vars.tilesize) + " on the " + teamName + " team");
+			this.configure("Created unit " + teamColor + unit.localizedName + "[] at " + (x / Vars.tilesize) + ", " + (y / Vars.tilesize));
 		},
 		
 		writeBase(write){
@@ -192,8 +238,9 @@ unitSpawner.buildType = () => {
 			
 			write.s(this._unit);
 			write.s(this._team);
-			write.i(this._unitX);
-			write.i(this._unitY);
+			
+			write.s(this._unitX);
+			write.s(this._unitY);
 		},
 		
 		readBase(read){
@@ -201,8 +248,9 @@ unitSpawner.buildType = () => {
 			
 			this._unit = read.s();
 			this._team = read.s();
-			this._unitX = read.i();
-			this._unitY = read.i();
+			
+			this._unitX = read.s();
+			this._unitY = read.s();
 		},
 
 		setUnit(id){

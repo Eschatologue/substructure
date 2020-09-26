@@ -8,7 +8,7 @@ const laserBullet = extend(BasicBulletType, {
 	update(b){
 		if(b.timer.get(1, 5)){
 			Damage.collideLine(b, b.team, this.hitEffect, b.x, b.y, b.rotation(), this.laserLength);
-		}
+		};
 	},
 
 	draw(b){
@@ -21,9 +21,9 @@ const laserBullet = extend(BasicBulletType, {
 			for(var i = 0; i < tscales.length; i++){
 				Lines.stroke(7 * b.fout() * (s == 0 ? 1.5 : s == 1 ? 1 : 0.3) * tscales[i]);
         		Lines.lineAngle(b.x, b.y, b.rotation(), baseLen * lenscales[i]);
-     	    }
-		}
-		Drawf.light(Team.derelict, b.x, b.y, b.x + Tmp.v1.x, b.y + Tmp.v1.y, 15f * b.fout(), colors[0], 0.6f);
+     	    };
+		};
+		Drawf.light(Team.derelict, b.x, b.y, b.x + Tmp.v1.x, b.y + Tmp.v1.y, 15 * b.fout(), colors[0], 0.6);
 		Draw.reset();
 	}
 });
