@@ -1,4 +1,5 @@
 const fx = this.global.substructure.fx;
+const functions = this.global.substructure.functions;
 
 const colors = [Color.valueOf("ec745855"), Color.valueOf("ec7458aa"), Color.valueOf("ff9c5a"), Color.white];
 const tscales = [1, 0.7, 0.5, 0.2];
@@ -35,7 +36,13 @@ laserBullet.despawnEffect = Fx.none;
 laserBullet.hitEffect = fx.chargeLaserHit;
 laserBullet.laserLength = 170;
 
-const chargeTurret = extendContent(ChargeTurret, "charge-turret", {});
+const chargeTurret = extendContent(ChargeTurret, "configurable-turret", {
+	init(){
+		this.super$init();
+		
+		functions.setWIP(this);
+	}
+});
 chargeTurret.size = 2;
 chargeTurret.health = 1240;
 chargeTurret.requirements = ItemStack.with(Items.copper, 65, Items.lead, 50, Items.graphite, 45, Items.silicon, 40);

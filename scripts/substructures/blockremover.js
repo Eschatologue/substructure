@@ -45,4 +45,4 @@ bRemover.buildType = () => {
 		}
 	});
 	return ent;
-}
+};

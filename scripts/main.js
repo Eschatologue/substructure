@@ -1,28 +1,25 @@
 this.global.substructure = {};
 
 /* File "handler" */
-const loadFiles = (arr, dir) => {
+const loadFiles = (files, directory) => {
 	var loaded = "";
-	for(var i in arr){
-		var file = arr[i];
-
-		this.global.substructure[file] = require("substructure/" + dir + "/" + file);
+	for(var i in files){
+		var file = files[i];
+		
+		this.global.substructure[file] = require("substructure/" + directory + "/" + file);
 		//i + 1 == arr.length ? loaded += file + ".js " : loaded += file + ".js, ";
-	}
+	};
 	//print("Loaded " + loaded + "in the \`" + dir + "\` directory.");
 }
 
-var libraries = ["fx"];
+var libraries = ["fx", "functions"];
 loadFiles(libraries, "lib");
 
-var logic = ["unitspawner", "blockposreader", "blockremover"];
-loadFiles(logic, "logic");
-
-var defense = ["perennialwalls"];
-loadFiles(defense, "defense");
-
-var turret = ["chargeturret"];
-loadFiles(turret, "turret");
-
-var units = ["shieldunit"];
-loadFiles(units, "units");
+var content = [
+	//Defense
+	"perennialwalls", "configurableturret",
+	//Logic
+	"unitspawner", "blockposreader", "blockremover"
+];
+	
+loadFiles(content, "substructures");

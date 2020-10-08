@@ -1,3 +1,5 @@
+const functions = this.global.substructure.functions;
+
 const unitSpawner = extendContent(MessageBlock, "unit-spawner", {});
 unitSpawner.size = 1;
 unitSpawner.solid = false;
