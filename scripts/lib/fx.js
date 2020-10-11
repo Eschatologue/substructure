@@ -27,8 +27,8 @@ module.exports = { //Unnecessary custom effects put together in one file
 		Lines.circle(e.x, e.y, e.fin() * 12);
 		}),
 
-	chargeLaserHit: new Effect(12, e => { //Charge turret laser hit effect
-		Draw.color(Pal.meltdownHit);
+	chargeLaserHit: new Effect(12, e => { //Configurable turret laser hit effect
+		Draw.color(e.color);
 		Lines.stroke(e.fout() * 1.5);
 
 		Angles.randLenVectors(e.id, 8, e.finpow() * 17, e.rotation, 360, new Floatc2({get: function(x, y){
@@ -37,8 +37,8 @@ module.exports = { //Unnecessary custom effects put together in one file
 		}}));
 	}),
 
-	chargeLaserShoot: new Effect(21, e => { //Charge turret shoot effect
-		Draw.color(Pal.meltdownHit);
+	chargeLaserShoot: new Effect(21, e => { //Configurable turret shoot effect
+		Draw.color(e.color);
 
 		for(var i = 0; i < 2; i++){
 			var l = Mathf.signs[i];
@@ -46,24 +46,24 @@ module.exports = { //Unnecessary custom effects put together in one file
 		};
 	}),
 
-	chargeLaserShootSmoke: new Effect(26, e => { //Charge turret laser smoke effect
-		Draw.color(Pal.meltdownHit);
+	chargeLaserShootSmoke: new Effect(26, e => { //Configurable turret laser smoke effect
+		Draw.color(e.color);
 
 		Angles.randLenVectors(e.id, 7, 80, e.rotation, 0, new Floatc2({get: function(x, y){
 			Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fout() * 9);
 		}}));
 	}),
 	
-	chargeLaserCharge: new Effect(38, e => { //Charge turret charging effect
-		Draw.color(Pal.meltdownHit);
+	chargeLaserCharge: new Effect(38, e => { //Configurable turret charging effect
+		Draw.color(e.color);
 
 		Angles.randLenVectors(e.id, 2, 1 + 20 * e.fout(), e.rotation, 120, new Floatc2({get: function(x, y){
 			Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 3 + 1);
 		}}));
 	}),
 
-	chargeLaserChargeBegin: new Effect(71, e => { //Charge turret begin charging effect
-		Draw.color(Pal.meltdownHit);
+	chargeLaserChargeBegin: new Effect(71, e => { //Configurable turret begin charging effect
+		Draw.color(e.color);
 		Fill.circle(e.x, e.y, e.fin() * 3);
 
 		Draw.color();

@@ -18,7 +18,7 @@ loadFiles(libraries, "lib");
 var content = [
 	//Defense
 	"perennialwalls", "configurableturret",
-	//Logic
+	//Utilities
 	"unitspawner", "blockposreader", "blockremover"
 ];
 	

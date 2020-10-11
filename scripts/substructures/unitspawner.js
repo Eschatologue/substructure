@@ -44,8 +44,8 @@ unitSpawner.buildType = () => {
 		draw(){
 			this.super$draw();
 
-			Draw.alpha(0.65);
-			Draw.mixcol(this.getTeam().color, 1);
+			Draw.alpha(0.75);
+			Draw.mixcol(this.getTeam().color.cpy().mul(1 + Mathf.absin(Time.time() / 2, 1, 0.035)), 1);
 			Draw.rect(this.getUnit().icon(Cicon.full), this.getUnitX(), this.getUnitY());
 			Draw.reset();
 		},
