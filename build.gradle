@@ -1,0 +1,64 @@
+buildscript{
+    ext{
+        mindustryVersion = buildVersion
+    }
+    
+    repositories{
+        mavenCentral()
+        maven{url "https://www.jitpack.io"}
+    }
+    
+    dependencies{
+        classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    }
+}
+
+allprojects{
+    apply plugin: "java"
+    group = "com.github.Gdeft"
+    version = 1.0
+    
+    ext{
+        version = 1.0
+        sourceCompatibility = 1.8
+    
+        mindustryVersion = buildVersion
+        sdkVersion = "30"
+        sdkRoot = System.getenv("ANDROID_HOME")
+        
+        tasks.withType(JavaCompile){
+            if(JavaVersion.current() != JavaVersion.VERSION_1_8){
+                options.compilerArgs.addAll(['--release', '8'])
+            }
+        }
+    }
+    
+    repositories{
+        mavenCentral()
+        maven{url "https://www.jitpack.io"}
+    }
+    
+    dependencies{
+        implementation "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    }
+}
+
+project(":core"){
+    apply plugin: "java-library"
+    
+    dependencies{
+        implementation "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    }
+}
+
+project(":tools"){
+    apply plugin: "java-library"
+    
+    dependencies{
+        implementation "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    }
+}

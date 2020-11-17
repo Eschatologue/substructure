@@ -1,0 +1,30 @@
+sourceSets.main.java.srcDirs = ["src/"]
+
+def assetsFolder = "../core/assets/sprites/"
+def genFolder = "../core/assets-raw/sprites-gen"
+
+task gen(dependsOn: classes){
+    doLast{
+        delete{
+            delete genFolder
+            delete assetsFolder
+        }
+
+        file(genFolder).mkdirs()
+        
+        javaexec{
+                main = "sub.tools.ImagePacker"
+                classpath = sourceSets.main.runtimeClasspath
+                jvmArgs("-Djava.awt.headless=true")
+                standardInput = System.in
+                workingDir = "../core/assets-raw/"
+        }
+        
+        copy{
+            from genFolder
+            into assetsFolder
+        }
+
+        file(assetsFolder).mkdirs()
+    }
+}

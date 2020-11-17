@@ -1,0 +1,5 @@
+if(JavaVersion.current().ordinal() < JavaVersion.VERSION_14.ordinal()){
+    throw new GradleException("You need JDK 14 to compile Gdeft/structure, as mentioned in README. Your version: ${System.properties["java.version"]}")
+}
+
+include 'core', 'tools'
