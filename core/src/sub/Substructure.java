@@ -6,7 +6,6 @@ import mindustry.*;
 import mindustry.ctype.*;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
-
 import sub.content.*;
 
 public class Substructure extends Mod{
