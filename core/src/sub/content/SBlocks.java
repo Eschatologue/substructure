@@ -18,7 +18,7 @@ public class SBlocks implements ContentList{
     public static Block
     
     //utilities
-    h, unitSpawner;
+    h, blockConfigurer, unitSpawner;
     
     @Override
     public void load(){
@@ -29,9 +29,17 @@ public class SBlocks implements ContentList{
             buildCostMultiplier = 4f;
         }};
         
+        blockConfigurer = new BlockConfigurer("block-configurer"){{
+            requirements(Category.logic, BuildVisibility.sandboxOnly, with(Items.copper, 2, Items.lead, 4));
+            rotate = true;
+            inProgress = true;
+        }};
+        
         unitSpawner = new UnitSpawner("unit-spawner"){{
             requirements(Category.logic, BuildVisibility.sandboxOnly, with(Items.copper, 2, Items.lead, 4));
             solid = false;
         }};
+        
+        //end region
     }
 }

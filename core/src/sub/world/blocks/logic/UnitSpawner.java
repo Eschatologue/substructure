@@ -25,6 +25,7 @@ public class UnitSpawner extends Structure{
         
         configurable = true;
         update = true;
+        sync = true;
     }
     
     public class UnitSpawnerBuild extends Building{
@@ -66,7 +67,7 @@ public class UnitSpawner extends Structure{
             
             cont.table(t -> {
                 t.top().margin(6f);
-                t.add("@dialog.title.select-unit").color(Pal.accent).growX().center();
+                t.add("@dialog.title.select-unit").color(Pal.accent).center().growX();
                 t.row();
                 t.image().color(Pal.accent).height(3f).pad(4f).fillX();
             }).width(800).center().row();

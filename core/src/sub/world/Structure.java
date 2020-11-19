@@ -19,7 +19,7 @@ public class Structure extends Block{
         super.init();
         
         if(inProgress){
-            description = Core.bundle.get(getContentType() + "." + this.name + ".description") + Core.bundle.get("excuse-2");
+            description = Core.bundle.get("excuse-2") + Core.bundle.get(getContentType() + "." + this.name + ".description");
         }
     }
     
