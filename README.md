@@ -1,7 +1,7 @@
 # Substructure
 
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
-[![Discprd](https://img.shields.io/discord/591914197219016707.svg?color=7289da&label=TestingMeme&logo=discord&style=flat-square)](https://discord.gg/RCCVQFW)
+[![Discprd](https://img.shields.io/discord/591914197219016707.svg?color=7289da&label=de_server&logo=discord&style=flat-square)](https://discord.gg/RCCVQFW)
 
 A mindustry mod containing examples to show what scripted contents can do. This branch is the Java version for this mod, click [here](https://github.com/Gdeft/substructure/tree/6.0) to see the JavaScript version branch.
 
