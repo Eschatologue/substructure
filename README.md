@@ -1,7 +1,7 @@
 # Substructure
 
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
-[![Discprd](https://img.shields.io/discord/591914197219016707.svg?color=7289da&label=de_server&logo=discord&style=flat-square)](https://discord.gg/RCCVQFW)
+[![Discprd](https://img.shields.io/discord/704355237246402721.svg?color=7289da&label=de_server&logo=discord&style=flat-square)](https://discord.gg/RCCVQFW)
 
 A mindustry mod containing examples to show what scripted contents can do. This branch is the Java version for this mod, click [here](https://github.com/Gdeft/substructure/tree/6.0) to see the JavaScript version branch.
 
@@ -19,16 +19,16 @@ On Windows, you can open the terminal by pressing `Win + R` then typing `cmd` th
 
 If you are also compiling for Android, you need to download Android SDK (just the command-line tools only). Set the 'ANDROID_HOME' environment variable to where it's located. Make sure that you have API Level 30 installed, then add the 'build-tools/${version}' to your 'PATH' environment variable [2].
 
-Gradle tasks [3]:
+### Gradle Tasks
 
-_Building (Desktop):_ `gradlew core:jar`
-_Building (Desktop + Android):_ `gradlew core:deploy`
-_Generating Sprites:_ `gradlew tools:gen`
+- _Building (Desktop):_ `gradlew core:jar`
+- _Building (Desktop + Android):_ `gradlew core:deploy`
+- _Generating Sprites:_ `gradlew tools:gen`
 
 Build outputs are located in `core/build/libs/`.
 
 ---
 
-*[1]: You can also use the import mod file from the game too.*
-*[2]: If something wrong happened, you can always google the solution.*
-*[3]: It's `./gradlew` for Linux and MacOS, but you should know that anyway.*
+- *[1]: You can also use the import mod file from the game too.*
+- *[2]: If something wrong happened, you can always google the solution.*
+- *[3]: It's `./gradlew` for Linux and MacOS, but you should know that anyway.*
