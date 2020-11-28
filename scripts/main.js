@@ -15,11 +15,13 @@ const loadFiles = (files, directory) => {
 var libraries = ["fx", "functions"];
 loadFiles(libraries, "lib");
 
-var content = [
+var contents = [
+    //Nothing
+    //"h",
 	//Defense
 	"perennialwalls", "configurableturret",
 	//Utilities
 	"unitspawner", "blockposreader", "blockremover"
 ];
 	
-loadFiles(content, "substructures");
+loadFiles(contents, "substructures");

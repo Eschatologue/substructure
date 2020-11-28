@@ -18,7 +18,7 @@ laserBullet.width = 25;
 laserBullet.despawnEffect = Fx.none;
 laserBullet.hitEffect = fx.chargeLaserHit;
 
-const confTurret = extendContent(ChargeTurret, "configurable-turret", {
+const confTurret = extendContent(PowerTurret, "configurable-turret", {
 	init(){
 		this.super$init();
 		
@@ -45,6 +45,7 @@ confTurret.category = Category.turret;
 confTurret.buildVisibility = BuildVisibility.shown;
 confTurret.configurable = true;
 confTurret.range = 160;
+confTurret.charging = true;
 confTurret.chargeTime = 50;
 confTurret.chargeMaxDelay = 25;
 confTurret.chargeEffects = 7;
@@ -62,7 +63,7 @@ confTurret.heatColor = Pal.meltdownHit;
 confTurret.targetAir = false;
 confTurret.shootSound = Sounds.laser;
 confTurret.buildType = () => {
-	const ent = extendContent(ChargeTurret.ChargeTurretBuild, confTurret, {
+	const ent = extendContent(PowerTurret.PowerTurretBuild, confTurret, {
 		init(tile, team, shouldAdd, rotation){
 			if(!this.initialized){
 				this.create(tile.block(), team);

@@ -1,4 +1,11 @@
-const bPReader = extendContent(MessageBlock, "block-position-reader", {
+const bPReader = extend(MessageBlock, "block-position-reader", {
+    size: 1,
+    category: Category.logic,
+    buildVisibility: BuildVisibility.shown,
+    requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
+    configurable: true,
+    rotate: true,
+
 	load(){
 		this.region = Core.atlas.find(this.name);
 		this.topRegion = Core.atlas.find(this.name + "-top");
@@ -11,12 +18,6 @@ const bPReader = extendContent(MessageBlock, "block-position-reader", {
 		];
 	}
 });
-bPReader.size = 1;
-bPReader.requirements = ItemStack.with(Items.copper, 2, Items.lead, 4);
-bPReader.buildVisibility = BuildVisibility.shown;
-bPReader.category = Category.logic;
-bPReader.configurable = true;
-bPReader.rotate = true;
 bPReader.buildType = () => {
 	const ent = extendContent(MessageBlock.MessageBuild, bPReader, {
 		draw(){
