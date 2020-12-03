@@ -47,7 +47,7 @@ public class UnitSpawner extends Structure{
             super.draw();
             
             Draw.alpha(0.75f);
-            Draw.mixcol(teamf().color.cpy().mul(1f + Mathf.absin(Time.time() / 2f, 1f, 0.035f)), 1f);
+            Draw.mixcol(teamf().color.cpy().mul(1f + Mathf.absin(Time.time / 2f, 1f, 0.035f)), 1f);
             Draw.rect(unitf().icon(Cicon.full), this.unitX, this.unitY);
             Draw.reset();
         }
