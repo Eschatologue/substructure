@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 ### Version
+- **Platform:** *Android/Windows/Linux/MacOS*
 - **Game:** *Your current game version, e.g. b120.3*
 - **Mod:** *Your current mod version and its branch (js/java), e.g. v1.1.3 js*
 
@@ -17,7 +18,7 @@ assignees: ''
 
 **Crash report:** *Required if the game crashes, including the last_log.txt file.*
 
-**Attachments:** *If applicable, add attachment or the game's save file to help explain your problem.*
+**Attachments:** *If applicable, add attachments and/or the game's save file to help explain your problem.*
 
 ---
 
