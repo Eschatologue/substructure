@@ -240,18 +240,18 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         write.s(this._unit);
         write.s(this._team);
 
-        write.s(this._unitX);
-        write.s(this._unitY);
+        write.i(this._unitX);
+        write.i(this._unitY);
     },
 
-    readBase(read){ 
-        this.super$readBase(read);
+    read(read){ 
+        this.super$read(read);
 
         this._unit = read.s();
         this._team = read.s();
 
-        this._unitX = read.s();
-        this._unitY = read.s();
+        this._unitX = read.i();
+        this._unitY = read.i();
     },
 
     setUnit(id){

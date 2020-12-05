@@ -1,12 +1,11 @@
 this.global.substructure = {};
-const category = ["campaign", "defense", "logic"];
+const category = ["campaign", "defense", "logic", "units"];
 
 Vars.enableConsole = true;
 
-
 /* File "handler" */
 const loadFiles = (contents, directory, mult) => {
-	let loaded = "";
+    let loaded = "";
     let file, path;
     
     if(mult){
@@ -45,7 +44,10 @@ const content = [
 	["perennialwalls", "configurableturret"],
     
 	//Logic
-	["unitspawner", "blockposreader", "blockremover"]
+	["unitspawner", "blockposreader", "blockremover"],
+    
+    //Units
+    ["carronade"]
 ];
 	
 loadFiles(content, "structures", true);
