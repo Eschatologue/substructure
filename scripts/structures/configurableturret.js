@@ -45,7 +45,6 @@ confTurret.category = Category.turret;
 confTurret.buildVisibility = BuildVisibility.shown;
 confTurret.configurable = true;
 confTurret.range = 160;
-confTurret.charging = true;
 confTurret.chargeTime = 50;
 confTurret.chargeMaxDelay = 25;
 confTurret.chargeEffects = 7;

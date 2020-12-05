@@ -1,4 +1,5 @@
 this.global.substructure = {};
+Vars.enableConsole = true;
 
 /* File "handler" */
 const loadFiles = (files, directory) => {
@@ -10,18 +11,18 @@ const loadFiles = (files, directory) => {
 		//i + 1 == arr.length ? loaded += file + ".js " : loaded += file + ".js, ";
 	};
 	//print("Loaded " + loaded + "in the \`" + dir + "\` directory.");
-}
+};
 
 var libraries = ["fx", "functions"];
 loadFiles(libraries, "lib");
 
 var contents = [
-    //Nothing
-    //"h",
+    //Campaign
+    "planetgen", "planets", "sectors",
 	//Defense
 	"perennialwalls", "configurableturret",
 	//Utilities
 	"unitspawner", "blockposreader", "blockremover"
 ];
 	
-loadFiles(contents, "substructures");
+loadFiles(contents, "structures");
