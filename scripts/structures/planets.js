@@ -9,6 +9,22 @@ detritus.atmosphereRadIn = -0.003;
 detritus.atmosphereRadOut = 0.37;
 detritus.startSector = 10;
 
+const cultch = extend(Planet, "cultch", detritus, 0, 0.32, {});
+cultch.atmosphereColor = Color.valueOf("5b4738");
+detritus.atmosphereRadIn = 0.003;
+cultch.accessible = false;
+cultch.meshLoader = () => new SunMesh(cultch, 3,
+    5, 0.3, 1.7, 1.2, 1,
+    1.1,
+    Color.valueOf("1a1a1a"),
+    Color.valueOf("080808"),
+    Color.valueOf("0c0c0c"),
+    Color.valueOf("141414"),
+    Color.valueOf("121212"),
+    Color.valueOf("1d1d1d")
+);
+
 module.exports = {
-    detritus: detritus
+    detritus: detritus,
+    cultch: cultch
 };

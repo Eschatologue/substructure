@@ -33,8 +33,8 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
     },
 		
     placed(){
-		this.super$placed();
-			
+        this.super$placed();
+
         this._unitX = this.getX();
         this._unitY = this.getY();
         //print("X: " + this.getUnitX() + " Y: " + this.getUnitY());
@@ -44,7 +44,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         this.super$draw();
 
         Draw.alpha(0.75);
-        Draw.mixcol(this.getTeam().color.cpy().mul(1 + Mathf.absin(Time.time() / 2, 1, 0.035)), 1);
+        Draw.mixcol(this.getTeam().color.cpy().mul(1 + Mathf.absin(Time.time / 2, 1, 0.035)), 1);
         Draw.rect(this.getUnit().icon(Cicon.full), this._unitX, this._unitY);
         Draw.reset();
     },
@@ -91,7 +91,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 t.button("$dialog.title.select-team", Icon.modeSurvival, () => {
                     this.teamDialog();
                 }).width(220).pad(4).growY();
-					
+
                 t.button("$dialog.title.select-position", Icon.grid, () => {
                     this.posDialog();
                 }).width(220).pad(4).growY();
@@ -119,7 +119,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
 				
             for(let i in teams){
                 let team = teams[i];
-					
+
                 this.addTeamButton(p, team);
                 if(++rt % 3 == 0) p.row();
             };
@@ -135,7 +135,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         cont.pane(cons(p => {
             let rt = 0;
             let teams = Team.all;
-                
+
             for(let i in teams){
                 let team = teams[i];
                 
@@ -143,14 +143,14 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 if(++rt % 3 == 0) p.row();
             };
         })).width(320).height(220).center().row();
-			
+
         cont.table(cons(t => {
             t.top().margin(6);
             t.add("$dialog.short.others").growX().color(Pal.accent);
             t.row();
             t.image().fillX().height(3).pad(4).color(Pal.accent);
         })).width(320).center().row();
-			
+
         cont.table(cons(t => {
             t.button("$dialog.info.reset-team", () => {
                 this.setTeam(this.team.id);
@@ -166,7 +166,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 }));
             }).growX().height(54).pad(4);
         })).width(300);
-			
+
         dialog.addCloseButton();
         dialog.show();
     },
@@ -174,21 +174,21 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
     posDialog(){
         let dialog = new BaseDialog("$dialog.title.select-position");
         let cont = dialog.cont;
-			
+
         cont.table(cons( t => {
             t.button("$dialog.info.reset-position", () => {
                 this._unitX = this.getX();
                 this._unitY = this.getY();
             }).growX().height(54).pad(4);
         })).width(300).center().row();
-			
+
         cont.table(cons(t => {
             t.top().margin(6);
             t.add("$dialog.info.custom-position").growX().color(Pal.accent);
             t.row();
             t.image().fillX().height(3).pad(4).color(Pal.accent);
         })).width(320).center().row();
-			
+
         cont.table(cons(t => {
             let worldX = Vars.world.width();
             let worldY = Vars.world.height();
@@ -213,7 +213,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 }));
             }).growX().height(54).pad(4);
         })).width(300).center();
-			
+
         dialog.addCloseButton();
         dialog.show();
     },
@@ -239,17 +239,17 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
 	
         write.s(this._unit);
         write.s(this._team);
-			
+
         write.s(this._unitX);
         write.s(this._unitY);
     },
-		
+
     readBase(read){ 
         this.super$readBase(read);
-			
+
         this._unit = read.s();
         this._team = read.s();
-			
+
         this._unitX = read.s();
         this._unitY = read.s();
     },
@@ -269,4 +269,4 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
     getTeam(){
         return Team.get(this._team);
 	}
-};
+});
