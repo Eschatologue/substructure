@@ -46,10 +46,10 @@ const detritusGenerator = extend(PlanetGenerator, {
         let res = arr[Mathf.clamp(Math.floor(temp * arr.length), 0, arr[0].length - 1)][Mathf.clamp(Math.floor(height * arr[0].length), 0, arr[0].length - 1)];
         return res;
     },
-
-    noise(x, y, octaves, falloff, scl, mag){
+    
+    noiseOct(x, y, octaves, falloff, scl){
         let v = this.sector.rect.project(x, y).scl(5);
-        return this.noise.octaveNoise3D(octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
+        return this.noise.octaveNoise3D(octaves, falloff, 1 / scl, v.x, v.y, v.z);
     },
 
     generate(tiles, sec){
@@ -77,9 +77,12 @@ const detritusGenerator = extend(PlanetGenerator, {
                 if(this.connected.contains(to)) return;
 
                 this.connected.add(to);
+                
+                const gend = detritusGenerator;
                 let nscl = rand.random(20, 60);
                 let stroke = rand.random(4, 12);
-                this.brush(this.pathfind(this.x, this.y, to.x, to.y, tile => (tile.solid() ? 5 : 0) + this.noise(tile.x, tile.y, 1, 1, 1 / nscl) * 60, Astar.manhattan), stroke);
+                
+                gend.brush(gend.pathfind(this.x, this.y, to.x, to.y, tile => (tile.solid() ? 5 : 0) + gend.noiseOct(tile.x, tile.y, 1, 1, 1 / nscl) * 60, Astar.manhattan), stroke);
             }
         };
         
@@ -201,26 +204,23 @@ const detritusGenerator = extend(PlanetGenerator, {
             frequencies.add(rand.random(-0.1, 0.01) - i * 0.01 + poles * 0.04);
         };
 
-        const floor = this.floor;
-        const ore = this.ore;
-
         this.pass((x, y) => {
-            if(!floor.asFloor().hasSurface()) return;
+            if(!this.floor.asFloor().hasSurface()) return;
 
             let offsetX = x - 4, offsetY = y + 23;
             for(let i = ores.size - 1; i >= 0; i--){
                 let entry = ores.get(i);
                 let freq = frequencies.get(i);
                 
-                if(Math.abs(0.5 - this.noise(offsetX, offsetY + i * 999, 2, 0.7, (40 + i * 2))) > 0.22 + i * 0.01 &&
-                    Math.abs(0.5 - this.noise(offsetX, offsetY - i * 999, 1, 1, (30 + i * 4))) > 0.37 + freq){
-                    ore = entry;
+                if(Math.abs(0.5 - this.noiseOct(offsetX, offsetY + i * 999, 2, 0.7, (40 + i * 2))) > 0.22 + i * 0.01 &&
+                    Math.abs(0.5 - this.noiseOct(offsetX, offsetY - i * 999, 1, 1, (30 + i * 4))) > 0.37 + freq){
+                    this.ore = entry;
                     break;
-                }
+                };    
             };
 
-            if(ore == Blocks.oreScrap && rand.chance(0.33)){
-                floor = Blocks.metalFloorDamaged;
+            if(this.ore == Blocks.oreScrap && rand.chance(0.33)){
+                this.floor = Blocks.metalFloorDamaged;
             };
         });
 
@@ -229,20 +229,20 @@ const detritusGenerator = extend(PlanetGenerator, {
         this.tech();
         this.pass((x, y) => {
             //random boulder
-            if(floor == Blocks.stone){
-                if(Math.abs(0.5 - this.noise(x - 90, y, 4, 0.8, 65)) > 0.02){
-                    floor = Blocks.boulder;
+            if(this.floor == Blocks.stone){
+                if(Math.abs(0.5 - this.noiseOct(x - 90, y, 4, 0.8, 65)) > 0.02){
+                    this.floor = Blocks.boulder;
                 };
             };
 
-            if(floor != Blocks.basalt && floor != Blocks.mud && floor.asFloor().hasSurface()){
-                let noise = this.noise(x + 782, y, 5, 0.75, 260, 1);
+            if(this.floor != null && this.floor != Blocks.basalt && this.floor != Blocks.mud && this.floor.asFloor().hasSurface()){
+                let noise = this.noiseOct(x + 782, y, 5, 0.75, 260);
                 if(noise > 0.72){
-                    floor = noise > 0.78 ? Blocks.taintedWater : (floor == Blocks.sand ? Blocks.sandWater : Blocks.darksandTaintedWater);
-                    ore = Blocks.air;
+                    this.floor = noise > 0.78 ? Blocks.taintedWater : (this.floor == Blocks.sand ? Blocks.sandWater : Blocks.darksandTaintedWater);
+                    this.ore = Blocks.air;
                 }else if(noise > 0.67){
-                    floor = (floor == Blocks.sand ? floor : Blocks.darksand);
-                    ore = Blocks.air;
+                    this.floor = (this.floor == Blocks.sand ? this.floor : Blocks.darksand);
+                    this.ore = Blocks.air;
                 };
             };
         });
@@ -259,7 +259,7 @@ const detritusGenerator = extend(PlanetGenerator, {
 
         let state = Vars.state;
 
-        if(sector.hasEnemyBase()){
+        if(this.sector.hasEnemyBase()){
             this.basegen.generate(tiles, enemies.map(r => this.tiles.getn(r.x, r.y)), this.tiles.get(spawn.x, spawn.y), state.rules.waveTeam, this.sector, difficulty);
 
             state.rules.attackMode = this.sector.info.attack = true;
@@ -279,7 +279,7 @@ const detritusGenerator = extend(PlanetGenerator, {
     },
 
     postGenerate(tiles){
-        if(sector.hasEnemyBase()){
+        if(this.sector.hasEnemyBase()){
             this.basegen.postGenerate();
         };
     } 
