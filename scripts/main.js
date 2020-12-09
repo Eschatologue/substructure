@@ -33,21 +33,21 @@ const loadFiles = (contents, directory, mult) => {
     };
 };
 
-const libraries = ["fx", "functions"];
-loadFiles(libraries, "lib");
-
+const libraries = ["fx", "sfx", "functions"];
+const experimental = [""];
 const content = [
     //Campaign
     ["planetgen", "planets", "sectors"],
     
-	//Defense
-	["perennialwalls", "configurableturret"],
+    //Defense
+    ["perennialwalls", "configurableturret"],
     
-	//Logic
-	["unitspawner", "blockposreader", "blockremover"],
+    //Logic
+    ["unitspawner", "blockposreader", "blockremover"],
     
     //Units
-    ["carronade"]
+    ["carronade", "culverin"]
 ];
-	
+
+loadFiles(libraries, "lib");
 loadFiles(content, "structures", true);

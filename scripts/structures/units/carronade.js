@@ -24,6 +24,7 @@ const carronade = extend(UnitType, "carronade", {
     hitSize: 9,
     health: 400,
     range: 80,
+    mechSideSway: 0.3,
 
     init(){
         this.super$init();
