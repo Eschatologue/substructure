@@ -1,5 +1,3 @@
-const functions = this.global.substructure.functions;
-
 const unitSpawner = extend(MessageBlock, "unit-spawner", {
     solid: false,
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),

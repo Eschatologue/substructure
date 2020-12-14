@@ -1,4 +1,4 @@
-const functions = this.global.substructure.functions;
+const f = this.global.substructure.func;
 
 const perennialWall = extend(Wall, "perennial-wall", {
     configurable: true,
@@ -9,7 +9,7 @@ const perennialWall = extend(Wall, "perennial-wall", {
     init(){
         this.super$init();
 		
-        functions.setWIP(this);
+        f.setWIP(this);
     },
 
     setStats(){
@@ -48,7 +48,7 @@ const perennialWallLarge = extend(Wall, "perennial-wall-large", {
     init(){
         this.super$init();
 		
-        functions.setWIP(this);
+        f.setWIP(this);
     },
 
     setStats(){

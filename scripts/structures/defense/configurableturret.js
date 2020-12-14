@@ -1,5 +1,5 @@
 const fx = this.global.substructure.fx;
-const functions = this.global.substructure.functions;
+const f = this.global.substructure.func;
 
 const laserBullet = extend(LaserBulletType, {
 	init(b){
@@ -22,7 +22,7 @@ const confTurret = extendContent(PowerTurret, "configurable-turret", {
 	init(){
 		this.super$init();
 		
-		functions.setWIP(this);
+		f.setWIP(this);
 	},
 	
 	load(){

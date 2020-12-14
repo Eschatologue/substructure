@@ -1,40 +1,40 @@
 this.global.substructure = {};
-const category = ["campaign", "defense", "logic", "units"];
+
+const cl = ["content", "util", "signal-logic"];
+const cc = ["campaign", "defense", "logic", "units"];
 
 Vars.enableConsole = true;
 
 /* File "handler" */
-const loadFiles = (contents, directory, mult) => {
+const loadFiles = (contents, directory, category) => {
     let loaded = "";
     let file, path;
-    
-    if(mult){
-        for(let i in contents){
-            let cat = contents[i];
-            loaded = "";
+
+    for(let i in contents){
+        let cat = contents[i];
+        loaded = "";
             
-            for(let j in cat){
-                file = cat[j];
-                path = directory + "/" + category[i] + "/";
+        for(let j in cat){
+            file = cat[j];
+            path = directory + "/" + category[i] + "/";
                 
-                this.global.substructure[file] = require("substructure/" + path + file);
-                file == cat[cat.length - 1] ? loaded += file + ".js " : loaded += file + ".js, ";
-            };
-            print("Loaded " + loaded + "from the \'" + path + "\` directory.");
+            this.global.substructure[file] = require("substructure/" + path + file);
+            file == cat[cat.length - 1] ? loaded += file + ".js " : loaded += file + ".js, ";
         };
-    }else{
-        for(let i in contents){
-            let file = contents[i];
-            
-            this.global.substructure[file] = require("substructure/" + directory + "/" + file);
-            file == contents[contents.length - 1] ? loaded += file + ".js " : loaded += file + ".js, ";
-        };
-        print("Loaded " + loaded + "from the \`" + directory + "\` directory.");
+        Log.info("Loaded " + loaded + "from the [accent]\'" + path + "\`[] directory.");
     };
 };
 
-const libraries = ["fx", "sfx", "functions"];
-const experimental = [""];
+const libraries = [
+    //Content
+    ["fx", "sfx"],
+    
+    //Utilities
+    ["func"],
+    
+    //Signal-logic
+    ["logicblock"]
+];
 const content = [
     //Campaign
     ["planetgen", "planets", "sectors"],
@@ -49,5 +49,5 @@ const content = [
     ["carronade", "culverin"]
 ];
 
-loadFiles(libraries, "lib");
-loadFiles(content, "structures", true);
+loadFiles(libraries, "lib", cl);
+loadFiles(content, "structures", cc);
