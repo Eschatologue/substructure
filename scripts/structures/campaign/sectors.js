@@ -1,4 +1,4 @@
-const planets = this.global.substructure.planets;
+const planets = global.substructure.planets;
 
 /* Detritus */
 const scrapyard = new SectorPreset("scrapyard", planets.detritus, 10);

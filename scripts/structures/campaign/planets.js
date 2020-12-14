@@ -1,4 +1,4 @@
-const planetGen = this.global.substructure.planetgen;
+const planetGen = global.substructure.planetgen;
 
 //why is there a large gap between 3 and 4
 const detritus = extend(Planet, "detritus", Planets.sun, 3, 1, {});

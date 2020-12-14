@@ -1,4 +1,4 @@
-this.global.substructure = {};
+global.substructure = {};
 
 const cl = ["content", "util", "signal-logic"];
 const cc = ["campaign", "defense", "logic", "units"];
@@ -18,7 +18,7 @@ const loadFiles = (contents, directory, category) => {
             file = cat[j];
             path = directory + "/" + category[i] + "/";
                 
-            this.global.substructure[file] = require("substructure/" + path + file);
+            global.substructure[file] = require("substructure/" + path + file);
             file == cat[cat.length - 1] ? loaded += file + ".js " : loaded += file + ".js, ";
         };
         Log.info("Loaded " + loaded + "from the [accent]\'" + path + "\`[] directory.");

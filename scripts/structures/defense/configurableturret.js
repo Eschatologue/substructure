@@ -1,5 +1,5 @@
-const fx = this.global.substructure.fx;
-const f = this.global.substructure.func;
+const fx = global.substructure.fx;
+const f = global.substructure.func;
 
 const laserBullet = extend(LaserBulletType, {
 	init(b){

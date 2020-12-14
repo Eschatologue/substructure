@@ -1,4 +1,4 @@
-const f = this.global.substructure.func;
+const f = global.substructure.func;
 
 const perennialWall = extend(Wall, "perennial-wall", {
     configurable: true,
@@ -15,8 +15,8 @@ const perennialWall = extend(Wall, "perennial-wall", {
     setStats(){
         this.super$setStats();
 		
-        this.stats.remove(BlockStat.health);
-        this.stats.add(BlockStat.health, "Infinite");
+        this.stats.remove(Stat.health);
+        this.stats.add(Stat.health, "Infinite");
     }
 });
 perennialWall.buildType = () => extend(Wall.WallBuild, perennialWall, {
@@ -54,8 +54,8 @@ const perennialWallLarge = extend(Wall, "perennial-wall-large", {
     setStats(){
         this.super$setStats();
 		
-        this.stats.remove(BlockStat.health);
-        this.stats.add(BlockStat.health, "Infinite");
+        this.stats.remove(Stat.health);
+        this.stats.add(Stat.health, "Infinite");
     }
 });
 perennialWallLarge.buildType = () => extend(Wall.WallBuild, perennialWallLarge, {
