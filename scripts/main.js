@@ -1,7 +1,7 @@
 global.substructure = {};
 
-const cl = ["content", "util", "signal-logic"];
-const cc = ["campaign", "defense", "logic", "units"];
+const cl = ["content", "util", "world"];
+const cc = ["defense", "logic", "units", "experimental", "campaign"];
 
 Vars.enableConsole = true;
 
@@ -21,7 +21,7 @@ const loadFiles = (contents, directory, category) => {
             global.substructure[file] = require("substructure/" + path + file);
             file == cat[cat.length - 1] ? loaded += file + ".js " : loaded += file + ".js, ";
         };
-        Log.info("Loaded " + loaded + "from the [accent]\'" + path + "\`[] directory.");
+        Log.info("Loaded " + loaded + "from the [accent]\'" + path + "\'[] directory.");
     };
 };
 
@@ -32,13 +32,10 @@ const libraries = [
     //Utilities
     ["func"],
     
-    //Signal-logic
-    ["logicblock"]
+    //World
+    ["PhasedBlock"]
 ];
 const content = [
-    //Campaign
-    ["planetgen", "planets", "sectors"],
-    
     //Defense
     ["perennialwalls", "configurableturret"],
     
@@ -46,7 +43,13 @@ const content = [
     ["unitspawner", "blockposreader", "blockremover"],
     
     //Units
-    ["carronade", "culverin"]
+    ["carronade", "culverin"],
+    
+    //Experimental
+    ["phasedblocktest"],
+    
+    //Campaign
+    ["content", "planetgen", "planets", "sectors", "techtree"]
 ];
 
 loadFiles(libraries, "lib", cl);

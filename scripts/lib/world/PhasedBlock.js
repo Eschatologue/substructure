@@ -15,10 +15,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-//TODO actually finish it
+const clone = (object) => {
+    let c = {};
+    for(let i in object){
+        (typeof(object[i]) == "object" && object[i] != null) ? c[i] = clone(object[i]) : c[i] = object[i];
+    };
+
+    return c;
+};
 
 /**
  * Phased-block properties for the block type.
+ *
  * @property {int}      consHealth              - Health of this block during construction.
  * @property {Color}    consColor               - The color of this block's hologram during construction.
  * @property {boolean}  variantPhaseRegions     - Whether or not use variant phase regions for each phase.
@@ -68,16 +76,40 @@ const pbcObject = {
     }
 };
 
+const pbbObject = {
+    //do not override these!
+    phase: 1,
+    constructed: false,
+    
+    display(table){
+        this.super$display(table);
+        
+        table.row();
+        table.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).growX().wrap().left();
+    }
+};
+
 /**
  * Creates a phased-block.
+ *
  * @param {Block}       classType     - The class type to extend, e.g. Block, GenericCrafter, etc.
- * @param {String}      name          - Name of the block, e.g. "some-block", "boring-crafter", etc.
+ * @param {String}      name          - Name of the block, e.g. "some-block", "some-crafter", etc.
  * @param {Object}      classObject   - Object for the classType parameter.
- * @param {Building}    build         - The build type for classType, e.g. Building, GenericCrafter, etc.
+ * @param {Building}    build         - The build type for classType, e.g. Building, GenericCrafterBuild, etc.
  * @param {Object}      buildObject   - Object for the build parameter.
  */
-const create = (classType, name, classObject, build, buildObject) => {
-    let cObject = Object.assign(pbcObject, classObject);
-    const pBlock = extend(classType, name, cObject);
-    
+function PhasedBlock(classType, name, classObject, build, buildObject){
+    classObject = Object.assign(pbcObject, classObject);
+    buildObject = Object.assign(pbbObject, buildObject);
+
+    //debugging
+    //Log.info(Object.keys(classObject).toString());
+    //Log.info(Object.keys(buildObject).toString());
+
+    const pBlock = extend(classType, name, classObject);
+    pBlock.buildType = () => extend(build, pBlock, clone(buildObject));
+
+    return pBlock;
 };
+ 
+module.exports = PhasedBlock;
