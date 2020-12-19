@@ -103,11 +103,13 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
     buildObject = Object.assign(pbbObject, buildObject);
 
     //debugging
-    //Log.info(Object.keys(classObject).toString());
-    //Log.info(Object.keys(buildObject).toString());
+    Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
+    Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
 
     const pBlock = extend(classType, name, classObject);
-    pBlock.buildType = () => extend(build, pBlock, clone(buildObject));
+    pBlock.update = true;
+    pBlock.sync = true;
+    build == Building ? pBlock.buildType = () => extend(build, clone(buildObject)) : pBlock.buildType = () => extend(build, pBlock, clone(buildObject));
 
     return pBlock;
 };

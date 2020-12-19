@@ -1,7 +1,7 @@
 const PhasedBlock = global.substructure.PhasedBlock;
 
 const pbTest1 = new PhasedBlock(Block, "phased-block-test-1", {
-        requirements: ItemStack.with(Items.copper, 1),
+    requirements: ItemStack.with(Items.copper, 1),
     buildVisibility: BuildVisibility.shown,
     category: Category.effect,
     
