@@ -2,7 +2,7 @@ const content = global.substructure.content;
 const sectors = global.substructure.sectors;
 
 /**
- * Node.
+ * Node for the research tech tree.
  *
  * @property {TechTree}             parent          - The parent of the current node.
  * @property {UnlockableContent}    contentType     - Content that is in this node.

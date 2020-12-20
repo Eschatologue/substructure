@@ -3,7 +3,8 @@ const unitSpawner = extend(MessageBlock, "unit-spawner", {
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
     buildVisibility: BuildVisibility.sandboxOnly,
     category: Category.logic,
-    configurable: true
+    configurable: true,
+    //saveConfig: true
 });
 unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
     init(tile, team, shouldAdd, rotation){

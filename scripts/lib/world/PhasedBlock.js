@@ -17,7 +17,7 @@
 
 const clone = (object) => {
     let c = {};
-    for(let i in object){
+    for(var i in object){
         (typeof(object[i]) == "object" && object[i] != null) ? c[i] = clone(object[i]) : c[i] = object[i];
     };
 
@@ -46,48 +46,6 @@ const clone = (object) => {
  * @property {Seq}      consRequirements        - Cost of constructing one phase of this block, each phase can have different requirements.
  * @property {float}    consCostMultiplier      - Multiplier for speed of constructing this block for each phase.
  */
-const pbcObject = {
-    consHealth: -1,
-    consColor: Color.white,
-    variantPhaseRegions: false,
-    consEffect: Fx.none,
-    consEffectChance: 0.06,
-    builtPhaseEffect: Fx.none,
-    builtEffect: Fx.none,
-
-    consSound: this.ambientSound,
-    consSoundVolume: this.ambientSoundVolume,
-    builtPhaseSound: Sounds.none,
-    builtPhaseSoundVolume: 0.05,
-    builtSound: Sounds.none,
-    builtSoundVolume: 0.05,
-
-    consPhases: -1,
-    consRequirements: new Seq(),
-    consCostMultiplier: 1,
-    phaseRegions: [],
-    
-    load(){
-        this.super$load();
-        
-        if(this.variantPhaseRegions){
-            for(let i = 0; i < this.consPhases; i++) this.phaseRegions[i] = Core.atlas.find(this.name + "-phase-" + i);
-        };
-    }
-};
-
-const pbbObject = {
-    //do not override these!
-    phase: 1,
-    constructed: false,
-    
-    display(table){
-        this.super$display(table);
-        
-        table.row();
-        table.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).growX().wrap().left();
-    }
-};
 
 /**
  * Creates a phased-block.
@@ -99,19 +57,105 @@ const pbbObject = {
  * @param {Object}      buildObject   - Object for the build parameter.
  */
 function PhasedBlock(classType, name, classObject, build, buildObject){
-    classObject = Object.assign(pbcObject, classObject);
-    buildObject = Object.assign(pbbObject, buildObject);
+    classObject = Object.assign({
+        consHealth: -1,
+        consColor: Color.white,
+        variantPhaseRegions: false,
+        consEffect: Fx.none,
+        consEffectChance: 0.06,
+        builtPhaseEffect: Fx.none,
+        builtEffect: Fx.none,
+
+        consSound: this.ambientSound,
+        consSoundVolume: this.ambientSoundVolume,
+        builtPhaseSound: Sounds.none,
+        builtPhaseSoundVolume: 0.05,
+        builtSound: Sounds.none,
+        builtSoundVolume: 0.05,
+
+        consPhases: -1,
+        consRequirements: new Seq(),
+        consCostMultiplier: 1,
+        phaseRegions: [],
+        
+        load(){
+            this.super$load();
+            
+            if(this.variantPhaseRegions){
+                for(let i = 0; i < this.consPhases; i++) this.phaseRegions[i] = Core.atlas.find(this.name + "-phase-" + i);
+            };
+            
+            if(typeof(classObject["cload"]) === "function") this.cload();
+        }
+    }, classObject);
+    buildObject = Object.assign({
+        //do not override these!
+        phase: 1,
+        constructed: false,
+        
+        display(table){
+            this.super$display(table);
+            
+            if(!this.constructed){
+                table.row();
+                table.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).growX().wrap().left();
+            }
+        },
+        
+        updateTile(){
+            if(this.constructed){
+                this.super$updateTile();
+                if(typeof(buildObject["cupdate"]) === "function") this.cupdate();
+            }else{
+                this.consUpdate();
+            };
+        },
+        
+        consUpdate(){
+            
+        },
+        
+        phaseFinish(p){
+            const block = pBlock;
+            
+            if(p < block.consPhases) return;
+            
+            if(p >= block.consPhases){
+                block.builtSound.at(this.x, this.y, 1, block.builtSoundVolume);
+                block.builtEffect.at(this.x, this.y);
+                
+                this.constructed = true;
+            }else{
+                block.builtPhaseSound.at(this.x, this.y, 1, block.builtPhaseSoundVolume);
+                block.builtPhaseEffect.at(this.x, this.y);
+                
+                this.phase += 1;
+            };
+        },
+        
+        write(write){
+            this.super$write(write);
+            
+            write.bool(this.constructed);
+            write.i(this.phase);
+        },
+        
+        read(read, revision){
+            this.super$read(read, revision);
+            
+            this.constructed = read.bool();
+            this.phase = read.i();
+        }
+    }, buildObject);
 
     //debugging
-    Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
-    Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
+    //Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
+    //Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
 
     const pBlock = extend(classType, name, classObject);
     pBlock.update = true;
     pBlock.sync = true;
     build == Building ? pBlock.buildType = () => extend(build, clone(buildObject)) : pBlock.buildType = () => extend(build, pBlock, clone(buildObject));
-
-    return pBlock;
 };
  
 module.exports = PhasedBlock;
