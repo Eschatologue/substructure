@@ -15,6 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const enableDebug = false;
 const clone = (object) => {
     let c = {};
     for(var i in object){
@@ -59,7 +60,7 @@ const clone = (object) => {
 function PhasedBlock(classType, name, classObject, build, buildObject){
     classObject = Object.assign({
         consHealth: -1,
-        consColor: Color.white,
+        consColor: Pal.accent,
         variantPhaseRegions: false,
         consEffect: Fx.none,
         consEffectChance: 0.06,
@@ -68,13 +69,13 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
 
         consSound: this.ambientSound,
         consSoundVolume: this.ambientSoundVolume,
-        builtPhaseSound: Sounds.none,
-        builtPhaseSoundVolume: 0.05,
-        builtSound: Sounds.none,
-        builtSoundVolume: 0.05,
+        builtPhaseSound: Sounds.place,
+        builtPhaseSoundVolume: 0.04,
+        builtSound: Sounds.unlock,
+        builtSoundVolume: 0.4,
 
         consPhases: -1,
-        consRequirements: new Seq(),
+        consRequirements: null,
         consCostMultiplier: 1,
         phaseRegions: [],
         
@@ -86,24 +87,28 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
             };
             
             if(typeof(classObject["cload"]) === "function") this.cload();
+        },
+        
+        getIcon(){
+            return this.icon(Cicon.full);
         }
     }, classObject);
     buildObject = Object.assign({
         //do not override these!
         phase: 1,
-        constructed: false,
+        isConstructed: false,
         
         display(table){
             this.super$display(table);
             
-            if(!this.constructed){
+            if(!this.isConstructed){
                 table.row();
                 table.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).growX().wrap().left();
             }
         },
         
         updateTile(){
-            if(this.constructed){
+            if(this.isConstructed){
                 this.super$updateTile();
                 if(typeof(buildObject["cupdate"]) === "function") this.cupdate();
             }else{
@@ -118,40 +123,56 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         phaseFinish(p){
             const block = pBlock;
             
-            if(p < block.consPhases) return;
-            
-            if(p >= block.consPhases){
+            if(p < this.phase || this.isConstructed){
+                this.isConstructed ?
+                    Log.error("This building is already constructed!") :
+                    Log.error("This building is already at phase " + this.phase + "!");
+            }else if(p >= block.consPhases){
                 block.builtSound.at(this.x, this.y, 1, block.builtSoundVolume);
-                block.builtEffect.at(this.x, this.y);
+                block.builtEffect.at(this.x, this.y, 0, pBlock.consColor, this);
                 
-                this.constructed = true;
+                this.isConstructed = true;
             }else{
                 block.builtPhaseSound.at(this.x, this.y, 1, block.builtPhaseSoundVolume);
-                block.builtPhaseEffect.at(this.x, this.y);
+                block.builtPhaseEffect.at(this.x, this.y, 0, pBlock.consColor, this);
                 
-                this.phase += 1;
+                this.phase++;
             };
         },
         
         write(write){
             this.super$write(write);
             
-            write.bool(this.constructed);
+            write.bool(this.isConstructed);
             write.i(this.phase);
         },
         
         read(read, revision){
             this.super$read(read, revision);
             
-            this.constructed = read.bool();
+            this.isConstructed = read.bool();
             this.phase = read.i();
+        },
+        
+        currentPhase(){
+            return this.phase;
+        },
+        
+        constructed(){
+            return this.isConstructed;
+        },
+        
+        pblock(){
+            return pBlock;
         }
     }, buildObject);
 
     //debugging
-    //Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
-    //Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
-
+    if(enableDebug){
+        Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
+        Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
+    };
+    
     const pBlock = extend(classType, name, classObject);
     pBlock.update = true;
     pBlock.sync = true;

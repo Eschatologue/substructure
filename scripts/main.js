@@ -1,7 +1,7 @@
 global.substructure = {};
 
 const cl = ["content", "util", "world"];
-const cc = ["defense", "logic", "units", "experimental", "campaign"];
+const cc = ["defense", "production", "logic", "units", "experimental", "campaign"];
 
 Vars.enableConsole = true;
 
@@ -39,6 +39,9 @@ const content = [
     //Defense
     ["perennialwalls", "configurableturret"],
     
+    //Production
+    ["tradingpost"],
+    
     //Logic
     ["unitspawner", "blockposreader", "blockremover"],
     
@@ -46,7 +49,7 @@ const content = [
     ["carronade", "culverin"],
     
     //Experimental
-    ["phasedblocktest"],
+    //["phasedblocktest"],
     
     //Campaign
     ["content", "planetgen", "planets", "sectors", "techtree"]
