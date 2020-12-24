@@ -1,6 +1,6 @@
 const extendf = global.substructure.func.extendf;
 
-const bPReader = extendf(Block, "block-position-reader", {
+const bPReader = extendf(MessageBlock, "block-position-reader", {
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
     buildVisibility: BuildVisibility.shown,
     category: Category.logic,
@@ -20,7 +20,7 @@ const bPReader = extendf(Block, "block-position-reader", {
     icons(){
         return [this.baseRegion, this.region];
     }
-}, Building, {
+}, MessageBlock.MessageBuild, {
     draw(){
         Draw.rect(this.blockf().baseRegion, this.x, this.y);
         Draw.rect(this.block.region, this.x, this.y, this.rotdeg());

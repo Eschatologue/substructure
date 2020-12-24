@@ -33,9 +33,6 @@ const bRemover = extendf(Block, "block-remover", {
         table.button(Icon.hammer, () => {
             if(otherPosEnt != null && otherPosEnt instanceof Healthc){
                 otherPosEnt.kill();
-                this.configure("Removed a building in X: " + (otherPosEnt.getX() / 8) + " Y: " + (otherPosEnt.getY() / 8));
-            }else{
-                this.configure("Cannot find building in X: " + (otherPos.getX() / 8) + " Y: " + (otherPos.getY() / 8));
             };
         });
     }

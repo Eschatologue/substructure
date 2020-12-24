@@ -13,8 +13,8 @@ const funcs = {
     },
 
     extendf: (classType, name, classObject, build, buildObject) => {
-        Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
-        Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
+        //Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
+        //Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());
         
         const block = extend(classType, name, classObject);
         block.update = true;

@@ -16,7 +16,7 @@
 */
 
 const clone = global.substructure.func.clone;
-const enableDebug = true;
+const enableDebug = false;
 
 /**
  * Phased-block properties for the block type.
@@ -91,13 +91,54 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         phase: 1,
         isConstructed: false,
         
-        display(table){
-            this.super$display(table);
+        init(tile, team, shouldAdd, rotation){
+            this.consBars();
             
+            this.maxHealthc = this.pblock().consHealth;
+            this.healthc = this.pblock().consHealth;
+            
+            return this.super$init(tile, team, shouldAdd, rotation);
+        },
+        
+        display(table){            
             if(!this.isConstructed){
+                table.table(cons(t => {
+                    t.left();
+                    t.add(new Image(this.block.getDisplayIcon(this.tile))).size(8 * 4);
+                    t.labelWrap(this.block.getDisplayName(this.tile)).left().width(190).padLeft(5);
+                })).growX().left();
                 table.row();
-                table.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).growX().wrap().left();
-            }
+                
+                table.table(cons(bars => {
+                    bars.defaults().growX().height(18).pad(4);
+                    this.displayCbars(bars);
+                })).growX();
+                table.row();
+                
+                let itemf = this.phaseReq(this.phase);
+                let amount = this.items != null ? this.items.get(itemf.item) : 0;
+                table.table(cons(t => {
+                    t.left();
+                    t.add(new Image(itemf.item.icon(Cicon.small))).size(8 * 4);
+                    t.labelWrap(amount + " / " + itemf.amount).left().width(190).padLeft(5);;
+                })).growX().left();
+            }else{
+                this.super$display(table);
+            };
+        },
+        
+        displayCbars(table){
+            this.cbars.each(bar => {
+                table.add(bar).growX();
+                table.row();
+            });
+        },
+        
+        consBars(){
+            this.cbars = new Seq();
+            
+            this.cbars.add(new Bar(Core.bundle.get("stat.health"), Pal.health, floatp(() => this.healthcf())));
+            this.cbars.add(new Bar(Core.bundle.format("lib.phaseblock.phase-display", this.phase), Pal.accent, floatp(() => this.phaseReqf())));
         },
         
         updateTile(){
@@ -110,7 +151,34 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         },
         
         consUpdate(){
-            
+            const itemf = this.phaseReq(this.phase);
+            if(this.items != null && this.items.has(itemf.item, itemf.amount)){
+                phaseFinish(this.phase);
+            };
+        },
+        
+        shouldConsume(){
+            const itemf = this.phaseReq(this.phase);
+            if(!this.isConstructed && !this.items.has(itemf.item, itemf.amount)) return true;
+            else{
+                this.super$shouldConsume();
+            };
+        },
+        
+        acceptItem(source, item){
+            if(!this.isConstructed){
+                return this.phaseReq(this.phase).item == item && this.items.get(item) < this.getMaximumAccepted(item);
+            }else{
+                this.super$acceptItem(source, item);
+            };
+        },
+        
+        getMaximumAccepted(item){
+            if(!this.isConstructed){
+                this.phaseReq(this.phase).amount;
+            }else{
+                this.super$getMaximumAccepted(item);
+            };
         },
         
         phaseFinish(p){
@@ -121,38 +189,61 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
                     Log.error("This building is already constructed!") :
                     Log.error("This building is already at phase " + this.phase + "!");
             }else if(p >= block.consPhases){
-                block.builtSound.at(this.x, this.y, 1, block.builtSoundVolume);
-                block.builtEffect.at(this.x, this.y, 0, pBlock.consColor, this);
+                this.consEffect(this.x, this.y, 1, block.builtSoundVolume, 0, block.consColor);
                 
                 this.isConstructed = true;
             }else{
-                block.builtPhaseSound.at(this.x, this.y, 1, block.builtPhaseSoundVolume);
-                block.builtPhaseEffect.at(this.x, this.y, 0, pBlock.consColor, this);
+                this.phaseEffect(this.x, this.y, 1, block.builtPhaseSoundVolume, 0, block.consColor);
                 
                 this.phase++;
             };
         },
-        
+
+        consEffect(x, y, pitch, volume, rotation, color){
+            pBlock.builtSound.at(x, y, pitch, volume);
+            pBlock.builtEffect.at(x, y, rotation, color, this);
+        },
+
+        phaseEffect(x, y, pitch, volume, rotation, color){
+            pBlock.builtPhaseSound.at(x, y, pitch, volume);
+            pBlock.builtPhaseEffect.at(x, y, rotation, color, this);
+        },
+
+        phaseReq(phase){
+            return pBlock.consRequirements.get(phase - 1);
+        },
+
+        phaseReqf(){
+            let itemf = this.phaseReq(this.phase);
+            return this.items != null ? this.items.get(itemf.item) / itemf.amount : 0;
+        },
+
         write(write){
             this.super$write(write);
             
             write.bool(this.isConstructed);
             write.i(this.phase);
+            write.f(this.healthc);
         },
-        
+
         read(read, revision){
             this.super$read(read, revision);
             
             this.isConstructed = read.bool();
             this.phase = read.i();
+            this.healthc = read.f();
         },
-        
+
         currentPhase(){
             return this.phase;
         },
-        
+
         constructed(){
             return this.isConstructed;
+        },
+        
+        healthcf(){
+            return this.healthc / this.maxHealthc;
         },
         
         pblock(){
@@ -166,6 +257,8 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
     };
     
     const pBlock = extend(classType, name, classObject);
+    pBlock.hasItems = true;
+    pBlock.acceptsItems = true;
     pBlock.update = true;
     pBlock.sync = true;
     build == Building ? pBlock.buildType = () => extend(build, clone(buildObject)) : pBlock.buildType = () => extend(build, pBlock, clone(buildObject));
