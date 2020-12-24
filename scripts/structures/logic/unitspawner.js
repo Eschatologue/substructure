@@ -14,16 +14,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+const extendf = global.substructure.func.extendf;
 
-const unitSpawner = extend(MessageBlock, "unit-spawner", {
-    solid: false,
+const unitSpawner = extendf(Block, "unit-spawner", {
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
     buildVisibility: BuildVisibility.sandboxOnly,
     category: Category.logic,
+    
+    health: 40,
+    size: 1,
     configurable: true,
-    //saveConfig: true
-});
-unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
+    solid: false,
+
+    load(){
+        this.super$load();
+        
+        this.baseRegion = Core.atlas.find("substructure-base");
+    },
+    
+    icons(){
+        return [this.baseRegion, this.region];
+    }
+}, Building, {
     init(tile, team, shouldAdd, rotation){
         if(!this.initialized){
             this.create(tile.block(), team);
@@ -47,7 +59,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         return this;
         //print("Default Unit: " + this.getUnit() + "; Team: " + this.getTeam());
     },
-		
+
     placed(){
         this.super$placed();
 
@@ -55,13 +67,15 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         this._unitY = this.getY();
         //print("X: " + this.getUnitX() + " Y: " + this.getUnitY());
     },
-		
-    draw(){
-        this.super$draw();
 
+    draw(){
+        Draw.rect(this.blockf().baseRegion, this.x, this.y);
+        
         Draw.alpha(0.75);
         Draw.mixcol(this.getTeam().color.cpy().mul(1 + Mathf.absin(Time.time / 2, 1, 0.035)), 1);
         Draw.rect(this.getUnit().icon(Cicon.full), this._unitX, this._unitY);
+        Draw.rect(this.block.region, this.x, this.y);
+        
         Draw.reset();
     },
 
@@ -84,7 +98,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
             t.row();
             t.image().fillX().height(3).pad(4).color(Pal.accent);
         })).width(800).center().row();
-			
+
         cont.pane(cons(p => {
             let ru = 0;
             let units = Vars.content.units();
@@ -101,7 +115,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 if(++ru % 3 == 0) p.row();
             }));
         })).width(800).height(540).top().center().row();
-			
+
         cont.table(cons(i => {
             i.table(cons(t => {
                 t.button("$dialog.title.select-team", Icon.modeSurvival, () => {
@@ -128,7 +142,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
             t.row();
             t.image().fillX().height(3).pad(4).color(Pal.accent);
         })).width(320).center().row();
-                    
+
         cont.pane(cons(p => {
             let rt = 0;
             let teams = Team.baseTeams;
@@ -140,14 +154,14 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
                 if(++rt % 3 == 0) p.row();
             };
         })).width(320).center().row();
-			
+
         cont.table(cons(t => {
             t.top().margin(6);
             t.add("$dialog.info.all-teams").growX().color(Pal.accent);
             t.row();
             t.image().fillX().height(3).pad(4).color(Pal.accent);
         })).width(320).center().row();
-			
+
         cont.pane(cons(p => {
             let rt = 0;
             let teams = Team.all;
@@ -249,7 +263,7 @@ unitSpawner.buildType = () => extend(MessageBlock.MessageBuild, unitSpawner, {
         unit.spawn(team, x, y);
         this.configure("Created unit " + teamColor + unit.localizedName + "[] at " + (x / Vars.tilesize) + ", " + (y / Vars.tilesize));
     },
-		
+
     write(write){
         this.super$write(write);
 	

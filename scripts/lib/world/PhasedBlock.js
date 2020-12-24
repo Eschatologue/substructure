@@ -15,15 +15,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const enableDebug = false;
-const clone = (object) => {
-    let c = {};
-    for(var i in object){
-        (typeof(object[i]) == "object" && object[i] != null) ? c[i] = clone(object[i]) : c[i] = object[i];
-    };
-
-    return c;
-};
+const clone = global.substructure.func.clone;
+const enableDebug = true;
 
 /**
  * Phased-block properties for the block type.
@@ -167,7 +160,6 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         }
     }, buildObject);
 
-    //debugging
     if(enableDebug){
         Log.info(classType + " | " + name + ": " + Object.keys(classObject).toString());
         Log.info(build + " | " + name + ": " + Object.keys(buildObject).toString());

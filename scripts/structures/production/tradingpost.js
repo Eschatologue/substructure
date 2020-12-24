@@ -29,5 +29,5 @@ const tradingPost = new PhasedBlock(Block, "trading-post", {
     consRequirements: Seq.with(ItemStack.with(Items.copper, 40, Items.silicon, 20), ItemStack.with(Items.graphite, 30), ItemStack.with(Items.copper, 80, Items.lead, 25), ItemStack.with(Items.silicon, 20)),
     consPhases: 4,
 }, Building, {
-    //soon
+    
 });

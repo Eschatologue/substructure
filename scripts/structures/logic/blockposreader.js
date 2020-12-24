@@ -1,31 +1,34 @@
-const bPReader = extend(MessageBlock, "block-position-reader", {
+const extendf = global.substructure.func.extendf;
+
+const bPReader = extendf(Block, "block-position-reader", {
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
     buildVisibility: BuildVisibility.shown,
     category: Category.logic,
+
+    health: 40,
+    size: 1,
     configurable: true,
     rotate: true,
+    solid: true,
     
     load(){
-        this.region = Core.atlas.find(this.name);
-        this.topRegion = Core.atlas.find(this.name + "-top");
+        this.super$load();
+        
+        this.baseRegion = Core.atlas.find("substructure-base");
     },
-
+    
     icons(){
-        return [
-            Core.atlas.find(this.region),
-            Core.atlas.find(this.topRegion)
-        ];
+        return [this.baseRegion, this.region];
     }
-});
-bPReader.buildType = () => extend(MessageBlock.MessageBuild, bPReader, {
+}, Building, {
     draw(){
-        Draw.rect(bPReader.region, this.x, this.y);
-        Draw.rect(bPReader.topRegion, this.x, this.y, this.rotdeg());
+        Draw.rect(this.blockf().baseRegion, this.x, this.y);
+        Draw.rect(this.block.region, this.x, this.y, this.rotdeg());
     },
 
     buildConfiguration(table){
-        let otherPos = this.tile.getNearby(this.rotation);
-        let otherPosEnt = this.tile.getNearbyEntity(this.rotation);
+        let otherPos = this.tile.nearby(this.rotation);
+        let otherPosEnt = this.tile.nearbyBuild(this.rotation);
 
         table.button(Icon.commandRally, () => {
             this.configure("X: " + (this.x / 8) + " Y: " + (this.y / 8));
@@ -33,11 +36,5 @@ bPReader.buildType = () => extend(MessageBlock.MessageBuild, bPReader, {
         table.button(Icon.up, () => {
             otherPosEnt == null ? this.configure("X: " + (otherPos.getX() / 8) + " Y: " + (otherPos.getY() / 8)) : this.configure("X: " + (otherPosEnt.getX() / 8) + " Y: " + (otherPosEnt.getY() / 8));
         }).size(40);
-    },
-    
-    placed(){
-        this.super$placed();
-
-        this.configure("...");
     }
 });

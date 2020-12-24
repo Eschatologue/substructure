@@ -1,31 +1,34 @@
-const bRemover = extend(MessageBlock, "block-remover", {
+const extendf = global.substructure.func.extendf;
+
+const bRemover = extendf(Block, "block-remover", {
     requirements: ItemStack.with(Items.copper, 2, Items.lead, 4),
     buildVisibility: BuildVisibility.sandboxOnly,
     category: Category.logic,
+
+    health: 40,
+    size: 1,
     configurable: true,
     rotate: true,
+    solid: true,
 
     load(){
-        this.region = Core.atlas.find(this.name);
-        this.topRegion = Core.atlas.find(this.name + "-top");
+        this.super$load();
+        
+        this.baseRegion = Core.atlas.find("substructure-base");
     },
-
+    
     icons(){
-        return [
-            Core.atlas.find(this.region),
-            Core.atlas.find(this.topRegion)
-        ];
+        return [this.baseRegion, this.region];
     }
-});
-bRemover.buildType = () => extend(MessageBlock.MessageBuild, bRemover, {
+}, Building, {
     draw(){
-        Draw.rect(bRemover.region, this.x, this.y); 
-        Draw.rect(bRemover.topRegion, this.x, this.y, this.rotdeg());
+        Draw.rect(this.blockf().baseRegion, this.x, this.y);
+        Draw.rect(this.block.region, this.x, this.y, this.rotdeg());
     },
     
     buildConfiguration(table){
-        let otherPos = this.tile.getNearby(this.rotation);
-        let otherPosEnt = this.tile.getNearbyEntity(this.rotation);
+        let otherPos = this.tile.nearby(this.rotation);
+        let otherPosEnt = this.tile.nearbyBuild(this.rotation);
 
         table.button(Icon.hammer, () => {
             if(otherPosEnt != null && otherPosEnt instanceof Healthc){
@@ -35,11 +38,5 @@ bRemover.buildType = () => extend(MessageBlock.MessageBuild, bRemover, {
                 this.configure("Cannot find building in X: " + (otherPos.getX() / 8) + " Y: " + (otherPos.getY() / 8));
             };
         });
-    },
-    
-    placed(){
-        this.super$placed();
-
-        this.configure("...");
     }
 });

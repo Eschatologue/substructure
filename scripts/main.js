@@ -4,6 +4,7 @@ const cl = ["content", "util", "world"];
 const cc = ["defense", "production", "logic", "units", "experimental", "campaign"];
 
 Vars.enableConsole = true;
+Vars.experimental = true;
 
 /* File "handler" */
 const loadFiles = (contents, directory, category) => {
@@ -49,7 +50,7 @@ const content = [
     ["carronade", "culverin"],
     
     //Experimental
-    //["phasedblocktest"],
+    ["phasedblocktest"],
     
     //Campaign
     ["content", "planetgen", "planets", "sectors", "techtree"]
