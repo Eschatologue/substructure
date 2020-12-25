@@ -115,29 +115,40 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
                 })).growX();
                 table.row();
                 
+                let phase = this.phase;
                 let itemf = this.phaseReq(this.phase);
                 let amount = this.items != null ? this.items.get(itemf.item) : 0;
+                
                 table.table(cons(t => {
-                    t.left();
-                    t.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).left();
-                    t.row();
-                    
-                    t.table(cons(t2 => {
-                        const rebuild = new RunnableAction();
-                        rebuild.setRunnable(() => {
-                            t2.clearChildren();
+                    const rebuild = new RunnableAction();
+                    rebuild.setRunnable(() => {
+                        t.clearChildren();
+                        t.left();
+                        
+                        t.add(Core.bundle.format("lib.phaseblock.phase-display", phase)).left();
+                        t.row();
+                        
+                        t.table(cons(t2 => {
                             t2.left();
-                            
+                                
                             t2.add(new Image(itemf.item.icon(Cicon.small)));
                             t2.labelWrap(amount + " / " + itemf.amount).left().width(190).padLeft(5);
-                        });
-                        
-                        rebuild.run();
-                        t2.update(() => {
+                        })).left();
+                    });
+                    
+                    rebuild.run();
+                    t.update(() => {
+                        if(!this.isConstructed){
                             amount = this.items != null ? this.items.get(itemf.item) : 0;
-                            rebuild.run()
-                        });
-                    })).left();
+                            itemf = this.phaseReq(this.phase);
+                            phase = this.phase;
+                            
+                            rebuild.run();
+                        }else{
+                            t.clearChildren();
+                            t.add("$lib.phaseblock.block-constructed").center();
+                        };
+                    });
                 })).padTop(12).growX().left();
                 
                 table.marginBottom(-5);
