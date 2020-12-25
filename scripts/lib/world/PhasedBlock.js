@@ -119,9 +119,28 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
                 let amount = this.items != null ? this.items.get(itemf.item) : 0;
                 table.table(cons(t => {
                     t.left();
-                    t.add(new Image(itemf.item.icon(Cicon.small))).size(8 * 4);
-                    t.labelWrap(amount + " / " + itemf.amount).left().width(190).padLeft(5);;
-                })).growX().left();
+                    t.add(Core.bundle.format("lib.phaseblock.phase-display", this.phase)).left();
+                    t.row();
+                    
+                    t.table(cons(t2 => {
+                        const rebuild = new RunnableAction();
+                        rebuild.setRunnable(() => {
+                            t2.clearChildren();
+                            t2.left();
+                            
+                            t2.add(new Image(itemf.item.icon(Cicon.small)));
+                            t2.labelWrap(amount + " / " + itemf.amount).left().width(190).padLeft(5);
+                        });
+                        
+                        rebuild.run();
+                        t2.update(() => {
+                            amount = this.items != null ? this.items.get(itemf.item) : 0;
+                            rebuild.run()
+                        });
+                    })).left();
+                })).padTop(12).growX().left();
+                
+                table.marginBottom(-5);
             }else{
                 this.super$display(table);
             };
@@ -137,8 +156,8 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         consBars(){
             this.cbars = new Seq();
             
-            this.cbars.add(new Bar(Core.bundle.get("stat.health"), Pal.health, floatp(() => this.healthcf())));
-            this.cbars.add(new Bar(Core.bundle.format("lib.phaseblock.phase-display", this.phase), Pal.accent, floatp(() => this.phaseReqf())));
+            this.cbars.add(new Bar(Core.bundle.get("stat.health"), Pal.lancerLaser, floatp(() => this.healthcf())));
+            this.cbars.add(new Bar(Core.bundle.get("lib.phaseblock.progress"), Pal.accent, floatp(() => this.phasef())));
         },
         
         updateTile(){
@@ -153,14 +172,18 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         consUpdate(){
             const itemf = this.phaseReq(this.phase);
             if(this.items != null && this.items.has(itemf.item, itemf.amount)){
-                phaseFinish(this.phase);
+                this.phaseFinish(this.phase);
+                this.items.remove(itemf.item, itemf.amount);
             };
         },
         
         shouldConsume(){
             const itemf = this.phaseReq(this.phase);
-            if(!this.isConstructed && !this.items.has(itemf.item, itemf.amount)) return true;
-            else{
+            if(!this.isConstructed){
+                if(this.items.get(itemf.item) >= itemf.amount) return false;
+                
+                return true;
+            }else{
                 this.super$shouldConsume();
             };
         },
@@ -175,7 +198,7 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         
         getMaximumAccepted(item){
             if(!this.isConstructed){
-                this.phaseReq(this.phase).amount;
+                return this.phaseReq(this.phase).amount;
             }else{
                 this.super$getMaximumAccepted(item);
             };
@@ -209,15 +232,6 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
             pBlock.builtPhaseEffect.at(x, y, rotation, color, this);
         },
 
-        phaseReq(phase){
-            return pBlock.consRequirements.get(phase - 1);
-        },
-
-        phaseReqf(){
-            let itemf = this.phaseReq(this.phase);
-            return this.items != null ? this.items.get(itemf.item) / itemf.amount : 0;
-        },
-
         write(write){
             this.super$write(write);
             
@@ -234,7 +248,7 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
             this.healthc = read.f();
         },
 
-        currentPhase(){
+        cPhase(){
             return this.phase;
         },
 
@@ -244,6 +258,19 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         
         healthcf(){
             return this.healthc / this.maxHealthc;
+        },
+        
+        phaseReq(phase){
+            return pBlock.consRequirements.get(phase - 1);
+        },
+
+        phaseReqf(){
+            let itemf = this.phaseReq(this.phase);
+            return this.items != null ? this.items.get(itemf.item) / itemf.amount : 0;
+        },
+        
+        phasef(){
+            return this.phase / pBlock.consPhases;
         },
         
         pblock(){

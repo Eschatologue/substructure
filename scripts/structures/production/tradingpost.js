@@ -31,3 +31,6 @@ const tradingPost = new PhasedBlock(Block, "trading-post", {
 }, Building, {
     
 });
+
+let b = Vars.world.build(52, 18);
+let c = Vars.world.build(51, 19);
