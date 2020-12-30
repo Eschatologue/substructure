@@ -9,7 +9,7 @@ const pbTest1 = new PhasedBlock(Block, "phased-block-test-1", {
     builtPhaseEffect: fx.phaseFinished,
     builtEffect: fx.consFinished,
     consHealth: this.health / 4,
-    consPhases: 5,
+    consPhases: 5
 }, Building, {
     draw(){
         Draw.color(Color.gray);
@@ -25,7 +25,7 @@ const pbTest2 = new PhasedBlock(MessageBlock, "phased-block-test-2", {
     builtPhaseEffect: fx.phaseFinished,
     builtEffect: fx.consFinished,
     consHealth: this.health / 4,
-    consPhases: 3,
+    consPhases: 3
 }, MessageBlock.MessageBuild, {
     draw(){
         Draw.color(Color.red);

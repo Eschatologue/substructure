@@ -106,7 +106,7 @@ const unitSpawner = extendf(Block, "unit-spawner", {
             units.each(cons(u => {
                 p.button(cons(b => {
                     b.left();
-                    b.image(u.icon(Cicon.medium)).size(40).padRight(2);
+                    b.image(u.icon(Cicon.medium)).scaling(Scaling.fit).size(40).padRight(6);
                     b.add(u.localizedName);
                 }), () => {
                     this.setUnit(u.id);
