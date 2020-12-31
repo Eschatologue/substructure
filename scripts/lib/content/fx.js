@@ -34,6 +34,26 @@ module.exports = {
         Draw.reset();
     }),
     
+    carronadeCharge: new Effect(120, e => {
+        let unit = e.data;
+        
+        Draw.mixcol(Pal.accent, 1);
+        Lines.stroke(e.fout() * 2.3);
+        
+        Lines.circle(unit.x, unit.y, e.fin() * 30);
+        Lines.square(unit.x, unit.y, e.fout() * 40, 45);
+        
+        e.scaled(65, s => {
+            Lines.stroke(s.fout() * 2.3);
+            Lines.square(unit.x, unit.y, s.fin() * 60, 45);
+        });
+        
+        Draw.alpha(e.fin() * 1.2 + 0.2);
+        Draw.rect(unit.icon(), unit.x, unit.y, unit.rotation - 90);
+        
+        Draw.reset();
+    }),
+    
     chargeLaserHit: new Effect(12, e => {
         Draw.color(e.color);
         Lines.stroke(e.fout() * 1.5);
@@ -75,5 +95,14 @@ module.exports = {
 
         Draw.color();
         Fill.circle(e.x, e.y, e.fin() * 2);
+    }),
+    
+    boosted: new Effect(42, e => {
+        Draw.color(e.color);
+        
+        Angles.randLenVectors(e.id, 2, 1 + e.fin() + 2, e.rotation, 360, new Floatc2({get(x, y){
+            let f = e.fout() * 2.3 + 0.5;
+            Drawf.tri(e.x + x * f, e.y + y * f, 5, 5, e.rotation);
+        }}));
     })
 };

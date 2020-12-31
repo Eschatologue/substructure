@@ -14,8 +14,7 @@ const artilleryBullet = extend(ArtilleryBulletType, 2, 12, "shell", {
 });
 
 const largeArtillery = extend(Weapon, "substructure-large-artillery2", {
-    x: 0,
-    y: 0,
+    x: 0, y: 0,
     rotate: true,
     rotateSpeed: 3,
     mirror: false,
@@ -25,6 +24,7 @@ const largeArtillery = extend(Weapon, "substructure-large-artillery2", {
     shotDelay: 6,
     spacing: 4,
     shake: 2,
+    
     ejectEffect: Fx.casing2,
     shootSound: Sounds.artillery,
     bullet: artilleryBullet
