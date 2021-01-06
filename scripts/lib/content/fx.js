@@ -34,7 +34,7 @@ module.exports = {
         Draw.reset();
     }),
     
-    carronadeCharge: new Effect(120, e => {
+    incendiaryCharge: new Effect(120, e => {
         let unit = e.data;
         
         Draw.mixcol(Pal.accent, 1);

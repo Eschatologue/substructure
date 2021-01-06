@@ -180,6 +180,25 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
             };
         },
         
+        draw(){
+            if(!this.isConstructed){
+                this.super$draw();
+                if(typeof(buildObject["cdraw"]) === "function") this.cdraw();
+            }else{
+                this.drawCons(this.phase);
+            };
+        },
+        
+        drawCons(phase){
+            let block = pBlock;
+            
+            Draw.rect(block.phaseRegions[phase - 2]);
+            
+            Draw.mixcol(block.consColor, 0.8);
+            //Draw.alpha(Mathf.absin());
+            Draw.rect(block.phaseRegions[phase- 1], this.x, this.y);
+        },
+        
         consUpdate(){
             const itemf = this.phaseReq(this.phase);
             if(this.items != null && this.items.has(itemf.item, itemf.amount)){

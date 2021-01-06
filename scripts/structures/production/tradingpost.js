@@ -27,7 +27,7 @@ const tradingPost = new PhasedBlock(Block, "trading-post", {
     builtPhaseEffect: fx.phaseFinished,
     builtEffect: fx.consFinished,
     consRequirements: Seq.with(new ItemStack(Items.copper, 40), new ItemStack(Items.graphite, 30), new ItemStack(Items.copper, 80), new ItemStack(Items.lead, 25), new ItemStack(Items.silicon, 20)),
-    consPhases: 5,
+    consPhases: 5
 }, Building, {
     
 });

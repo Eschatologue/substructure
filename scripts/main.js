@@ -47,7 +47,7 @@ const content = [
     ["unitspawner", "blockposreader", "blockremover"],
     
     //Units
-    ["carronade", "culverin"],
+    ["carronade", "culverin", "serpentine"],
     
     //Experimental
     ["phasedblocktest"],

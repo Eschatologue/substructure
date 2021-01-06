@@ -1,4 +1,4 @@
-const cblock = name => Vars.content.block("substructure-" + name);
+const cblock = name => Vars.content.getByName(ContentType.block, "substructure-" + name);
 const cunit = name => Vars.content.getByName(ContentType.unit, "substructure-" + name);
 
 module.exports = {
@@ -25,5 +25,6 @@ module.exports = {
     /* region units */
     
     carronade: cunit("carronade"),
-    culverin: cunit("culverin")
+    culverin: cunit("culverin"),
+    serpentine: cunit("serpentine")
 };

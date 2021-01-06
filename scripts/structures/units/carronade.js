@@ -14,7 +14,7 @@ const explosive = extend(BombBulletType, 0, 0, "clear", {
     keepVelocity: true,
     
     frontColor: Pal.accent, backColor: Pal.accent.cpy(),
-    shootEffect: fx.carronadeCharge,
+    shootEffect: fx.incendiaryCharge,
     hitEffect: Fx.blastExplosion,
     despawnEffect: Fx.blastExplosion,
 
@@ -28,7 +28,7 @@ const selfDestruct = extend(Weapon, {
     reload: 280,
     shootCone: 180,
     shake: 8,
-    firstShotDelay: fx.carronadeCharge.lifetime,
+    firstShotDelay: fx.incendiaryCharge.lifetime,
     
     shootStatus: sfx.boost,
     shootStatusDuration: 60 * 3,

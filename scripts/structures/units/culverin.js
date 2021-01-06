@@ -1,4 +1,4 @@
-const artilleryBullet = extend(ArtilleryBulletType, 2, 12, "shell", {
+const artilleryRound = extend(ArtilleryBulletType, 2, 12, "shell", {
     knockback: 0.6,
     lifetime: 140,
     width: 14,
@@ -27,7 +27,7 @@ const largeArtillery = extend(Weapon, "substructure-large-artillery2", {
     
     ejectEffect: Fx.casing2,
     shootSound: Sounds.artillery,
-    bullet: artilleryBullet
+    bullet: artilleryRound
 });
 
 const culverin = extend(UnitType, "culverin", {

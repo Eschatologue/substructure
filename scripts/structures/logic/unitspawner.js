@@ -48,13 +48,13 @@ const unitSpawner = extendf(Block, "unit-spawner", {
         };
         this.rotation = rotation;
         this.tile = tile;
-			
+        
         this.setUnit(UnitTypes.dagger.id);
         this.setTeam(team.id);
-			
+        
         this.set(tile.drawx(), tile.drawy());
         if(shouldAdd) this.add();
-			
+        
         this.created();
         return this;
         //print("Default Unit: " + this.getUnit() + "; Team: " + this.getTeam());
