@@ -38,7 +38,7 @@ const enableDebug = false;
  *
  * @property {int}      consPhases              - How many construction phases this block has.
  * @property {Seq}      consRequirements        - Cost of constructing one phase of this block, each phase can have different requirements.
- * @property {float}    consCostMultiplier      - Multiplier for speed of constructing this block for each phase.
+ * @property {Array}    phaseRegions            - Variants of this block's phase region, only loaded if {@link variantPhaseRegions} is set to true.
  */
 
 /**
@@ -69,7 +69,6 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
 
         consPhases: -1,
         consRequirements: null,
-        consCostMultiplier: 1,
         phaseRegions: [],
         
         load(){
@@ -96,6 +95,8 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
             
             this.maxHealthc = this.pblock().consHealth;
             this.healthc = this.pblock().consHealth;
+            
+            this.handleErrors();
             
             return this.super$init(tile, team, shouldAdd, rotation);
         },
@@ -192,11 +193,19 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         drawCons(phase){
             let block = pBlock;
             
-            Draw.rect(block.phaseRegions[phase - 2]);
+            Draw.color(this.phaseColor(this));
+            Draw.alpha(build.healthf() + Mathf.absin(Time.time, Math.max(build.healthf() * 5, 1), 1 - build.healthf()));
             
-            Draw.mixcol(block.consColor, 0.8);
-            //Draw.alpha(Mathf.absin());
-            Draw.rect(block.phaseRegions[phase- 1], this.x, this.y);
+            if(block.variantPhaseRegions){
+                Draw.rect(block.phaseRegions[phase - 2]);
+                Draw.rect(block.phaseRegions[phase- 1], this.x, this.y);
+            }else{
+                Draw.rect(block.region, this.x, this.y);
+            };
+        },
+
+        phaseColor(build){
+            return Tmp.c1.set(Color.black).lerp(build.pblock().color, build.healthf() + Mathf.absin(Time.time, Math.max(build.healthf() * 5, 1), 1 - build.healthf()));
         },
         
         consUpdate(){
@@ -235,7 +244,7 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         },
         
         phaseFinish(p){
-            const block = pBlock;
+            const block = this.pblock();
             
             if(p < this.phase || this.isConstructed){
                 this.isConstructed ?
@@ -253,13 +262,13 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         },
 
         consEffect(x, y, pitch, volume, rotation, color){
-            pBlock.builtSound.at(x, y, pitch, volume);
-            pBlock.builtEffect.at(x, y, rotation, color, this);
+            this.pblock().builtSound.at(x, y, pitch, volume);
+            this.pblock().builtEffect.at(x, y, rotation, color, this);
         },
 
         phaseEffect(x, y, pitch, volume, rotation, color){
-            pBlock.builtPhaseSound.at(x, y, pitch, volume);
-            pBlock.builtPhaseEffect.at(x, y, rotation, color, this);
+            this.pblock().builtPhaseSound.at(x, y, pitch, volume);
+            this.pblock().builtPhaseEffect.at(x, y, rotation, color, this);
         },
 
         write(write){
@@ -300,11 +309,23 @@ function PhasedBlock(classType, name, classObject, build, buildObject){
         },
         
         phasef(){
-            return this.phase / pBlock.consPhases;
+            return this.phase / this.pblock().consPhases;
         },
         
         pblock(){
             return pBlock;
+        },
+        
+        handleErrors(){
+            let block = this.pblock();
+            
+            if(block.consRequirements == null){
+                throw new Error("Phased-block's consRequirements cannot be null.");
+            }else if(block.consPhases == null){
+                throw new Error("Phased-block's consPhases cannot be null.");
+            }else if(block.consRequirements.size != block.consPhases){
+                throw new Error("Phased-block's consRequirements must have the same size as consPhases.\nconsRequirements size: " + block.consRequirements.size + ", total phases: " + block.consPhases);
+            };
         }
     }, buildObject);
 

@@ -24,6 +24,7 @@ const pbTest2 = new PhasedBlock(MessageBlock, "phased-block-test-2", {
     
     builtPhaseEffect: fx.phaseFinished,
     builtEffect: fx.consFinished,
+    consRequirements: Seq.with(new ItemStack(Items.copper, 1)),
     consHealth: this.health / 4,
     consPhases: 3
 }, MessageBlock.MessageBuild, {
